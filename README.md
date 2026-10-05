@@ -4871,7 +4871,7 @@ sem os tons escuros atuais.
         </div>
       </section>
       <section>
-        <div class="section-title-kpi"><i class="fa-solid fa-chart-pie"></i> INDICADORES DE CERTIFICAÇÃO</div>
+        <div class="section-title-kpi section-title-kpi-destaque"><i class="fa-solid fa-chart-pie"></i> INDICADORES DE CERTIFICAÇÃO</div>
         <div class="kpi-grid">
 <!-- CARD 1: PONTO POR CABEÇA -->
           <div class="kpi-card kpi-success" id="cardPontoCabeca" onclick="abrirModalPontoCabeca()">
@@ -5355,7 +5355,7 @@ sem os tons escuros atuais.
           </div>
         </div><!-- /kpi-grid certificação -->
 
-        <div class="section-title-kpi" style="margin-top: 24px;"><i class="fa-solid fa-chart-pie"></i> SINALIZADORES</div>
+        <div class="section-title-kpi section-title-kpi-destaque" style="margin-top: 24px;"><i class="fa-solid fa-chart-pie"></i> SINALIZADORES</div>
         <div class="kpi-grid">
 <!-- CARD 17: SLA IAT 48 HORAS -->
           <div class="kpi-card kpi-success" id="cardSlaIat48" onclick="abrirModalSlaIat48()">
@@ -15634,6 +15634,19 @@ body.dark-mode.tv-mode .ranking-executive-card.recolhimento .ranking-board-row::
   border-left: 0 !important;
   border-right: 0 !important;
 }
+</style>
+
+<style id="ajuste-titulos-indicadores-destaque">
+  /* Apenas os títulos INDICADORES DE CERTIFICAÇÃO e SINALIZADORES. */
+  .section-title-kpi-destaque {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+    line-height: 1.2 !important;
+  }
+  .section-title-kpi-destaque i {
+    font-size: 13px !important;
+  }
 </style>
 </body>
 </html>
