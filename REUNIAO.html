@@ -1,19 +1,167 @@
-from pathlib import Path
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel do Supervisor</title>
+<style>
+:root{--orange:#ff5a1f;--orange2:#ff7a45;--text:#172033;--muted:#667085}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,Helvetica,sans-serif}
+body{display:flex;align-items:center;justify-content:center;background:#f8f9fb;color:var(--text);position:relative}
+.bg{position:absolute;inset:0;overflow:hidden;background:radial-gradient(circle at 15% 20%,rgba(255,90,31,.12),transparent 28%),radial-gradient(circle at 85% 75%,rgba(255,122,69,.10),transparent 30%),#f8f9fb}
+.grid{position:absolute;inset:-20%;opacity:.22;background-image:linear-gradient(rgba(255,90,31,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,90,31,.08) 1px,transparent 1px);background-size:70px 70px;transform:perspective(500px) rotateX(60deg) translateY(8%);animation:grid 14s linear infinite}
+.orb{position:absolute;border-radius:50%;filter:blur(2px);opacity:.15;animation:float 8s ease-in-out infinite}
+.one{width:280px;height:280px;background:var(--orange);left:-80px;top:10%}
+.two{width:360px;height:360px;background:var(--orange2);right:-130px;bottom:-120px;animation-delay:-3s}
+@keyframes grid{to{transform:perspective(500px) rotateX(60deg) translateY(8%) translateX(-70px)}}
+@keyframes float{50%{transform:translate(25px,-25px) scale(1.06)}}
+.container{position:relative;z-index:2;width:min(1150px,90vw);text-align:center}
+.brand{display:inline-flex;align-items:center;gap:14px;margin-bottom:34px;animation:down .9s ease both}
+.icon{width:52px;height:52px;border-radius:14px;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;box-shadow:0 10px 25px rgba(255,90,31,.22)}
+.brand b{font-size:28px;letter-spacing:-.8px}.brand span{color:var(--orange)}
+.welcome{font-size:20px;font-weight:700;color:var(--orange);letter-spacing:2px;text-transform:uppercase;animation:up .9s .15s both}
+h1{margin:14px 0 0;font-size:clamp(46px,6vw,78px);line-height:1;letter-spacing:-3px;animation:up .9s .25s both}
+.sub{margin-top:12px;color:var(--muted);font-size:18px;animation:up .9s .35s both}
+.timebox{margin:38px auto 0;width:min(390px,72vw);padding:20px 24px;border:1px solid rgba(255,90,31,.16);border-radius:22px;background:rgba(255,255,255,.76);box-shadow:0 18px 50px rgba(31,41,55,.08);backdrop-filter:blur(8px);animation:up .9s .45s both}
+.label{color:#7b8494;font-size:12px;text-transform:uppercase;letter-spacing:2px;font-weight:700}
+.time{margin-top:7px;font-size:clamp(48px,6vw,76px);line-height:1;font-weight:800;color:var(--orange);letter-spacing:-5px;text-shadow:0 8px 30px rgba(255,90,31,.16);animation:pulse 2.5s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.025)}}
+.status{margin-top:18px;display:inline-flex;align-items:center;gap:9px;padding:9px 15px;border-radius:999px;background:rgba(255,90,31,.08);color:var(--orange);font-size:13px;font-weight:700}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:dot 1.6s infinite}
+@keyframes dot{70%{box-shadow:0 0 0 9px rgba(255,90,31,0)}}
+.brand-company{
+  position:fixed;
+  left:28px;
+  bottom:18px;
+  z-index:3;
+  display:flex;
+  align-items:center;
+  gap:2px;
+  height:36px;
+  color:var(--orange);
+  font-weight:800;
+  letter-spacing:-1px;
+}
+.brand-symbol{
+  font-size:31px;
+  line-height:1;
+  transform:scaleX(.7);
+  display:inline-block;
+}
+.brand-word{
+  font-size:24px;
+  line-height:1;
+}.footer{position:fixed;bottom:22px;left:0;right:0;text-align:center;color:#98a0ad;font-size:12px;letter-spacing:.4px}
 
-src = Path("/mnt/data/Tela_Abertura_Painel_do_Supervisor_V4.html")
-html = src.read_text(encoding="utf-8")
+/* Gráficos decorativos */
+.chart{position:absolute;z-index:1;width:270px;height:150px;opacity:.13}
+.chart.left{left:3%;bottom:13%}.chart.right{right:3%;top:18%;transform:scaleX(-1)}
+.chart svg{width:100%;height:100%}
+.chart path.line{fill:none;stroke:var(--orange);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:520;stroke-dashoffset:520;animation:draw 4s ease-in-out infinite}
+.chart .area{fill:var(--orange);opacity:.14}
+.chart circle{fill:var(--orange)}
+@keyframes draw{0%{stroke-dashoffset:520}55%,100%{stroke-dashoffset:0}}
 
-html = html.replace(
-    '<div class="sub" id="sub">Prepare-se para acompanhar os principais indicadores da operação.</div>',
-    '<div class="sub" id="sub">Prepare-se para conhecer o novo Painel do Supervisor.</div>'
-)
+.bars{position:absolute;z-index:1;display:flex;gap:8px;align-items:flex-end;opacity:.12}
+.bars.left{left:5%;top:25%}.bars.right{right:5%;bottom:22%}
+.bar{width:13px;background:var(--orange);border-radius:5px 5px 0 0;animation:bar 2.6s ease-in-out infinite}
+.bar:nth-child(1){height:35px}.bar:nth-child(2){height:65px;animation-delay:.2s}.bar:nth-child(3){height:48px;animation-delay:.4s}.bar:nth-child(4){height:88px;animation-delay:.6s}.bar:nth-child(5){height:58px;animation-delay:.8s}
+@keyframes bar{50%{transform:scaleY(.62)}}
 
-# Keep the same message after the meeting starts.
-html = html.replace(
-    'document.getElementById("sub").textContent="Painel do Supervisor • - Inteligência de dados";',
-    'document.getElementById("sub").textContent="Painel do Supervisor • - Inteligência de dados";'
-)
+.cards{position:absolute;z-index:1;right:7%;bottom:8%;display:flex;gap:8px;opacity:.12}
+.mini{width:95px;height:58px;border:1px solid var(--orange);border-radius:10px;background:#fff;position:relative;overflow:hidden}
+.mini:after{content:"";position:absolute;left:9px;right:9px;bottom:10px;height:3px;background:var(--orange);border-radius:5px;animation:load 2s ease-in-out infinite}
+.mini:nth-child(2):after{animation-delay:.4s}.mini:nth-child(3):after{animation-delay:.8s}
+@keyframes load{0%{width:15%}50%{width:80%}100%{width:35%}}
 
-out = Path("/mnt/data/Tela_Abertura_Painel_do_Supervisor_FINAL.html")
-out.write_text(html, encoding="utf-8")
-print(out)
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes down{from{opacity:0;transform:translateY(-15px)}to{opacity:1;transform:none}}
+@media(max-width:800px){.chart,.bars,.cards{display:none}.container{width:92vw}.brand b{font-size:22px}h1{letter-spacing:-2px}.sub{font-size:16px}.time{font-size:52px}}
+</style>
+</head>
+<body>
+
+<div class="bg"><div class="grid"></div><div class="orb one"></div><div class="orb two"></div></div>
+
+<div class="chart left">
+<svg viewBox="0 0 270 150">
+<path class="area" d="M10 125 L45 92 L78 108 L115 60 L150 78 L190 35 L225 52 L260 20 L260 145 L10 145 Z"/>
+<path class="line" d="M10 125 L45 92 L78 108 L115 60 L150 78 L190 35 L225 52 L260 20"/>
+<circle cx="10" cy="125" r="4"/><circle cx="115" cy="60" r="4"/><circle cx="190" cy="35" r="4"/><circle cx="260" cy="20" r="4"/>
+</svg>
+</div>
+
+<div class="chart right">
+<svg viewBox="0 0 270 150">
+<path class="area" d="M10 125 L45 92 L78 108 L115 60 L150 78 L190 35 L225 52 L260 20 L260 145 L10 145 Z"/>
+<path class="line" d="M10 125 L45 92 L78 108 L115 60 L150 78 L190 35 L225 52 L260 20"/>
+</svg>
+</div>
+
+<div class="bars left">
+<div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+</div>
+
+<div class="bars right">
+<div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+</div>
+
+<div class="cards"><div class="mini"></div><div class="mini"></div><div class="mini"></div></div>
+
+<main class="container">
+  <div class="brand">
+    <div class="icon">▰</div>
+    <b>Painel do <span>Supervisor</span></b>
+  </div>
+
+  <div class="welcome">Seja bem-vindo!</div>
+  <div class="sub" id="sub">Prepare-se para acompanhar os principais indicadores da operação.</div>
+  <h1 id="main">Nossa reunião começará em</h1>
+
+  <div class="timebox">
+    <div class="label" id="label">Início previsto</div>
+    <div class="time" id="time">14:05</div>
+    <div class="status"><span class="dot"></span><span id="status">Aguardando início da reunião</span></div>
+  </div>
+</main>
+
+<div class="brand-company"><span class="brand-symbol">›</span><span class="brand-word">brisanet</span></div>
+<div class="footer">Painel do Supervisor • - Inteligência de dados</div>
+
+<script>
+/* ALTERE SOMENTE ESTE HORÁRIO */
+const HORARIO_INICIO="17:05";
+
+const agora=new Date();
+const partes=HORARIO_INICIO.split(":").map(Number);
+const alvo=new Date(agora);
+alvo.setHours(partes[0],partes[1],0,0);
+if(alvo<=agora) alvo.setDate(alvo.getDate()+1);
+
+function atualizar(){
+  const diferenca=alvo-new Date();
+
+  if(diferenca<=0){
+    document.getElementById("sub").textContent="Painel do Supervisor • - Inteligência de dados";
+    document.getElementById("main").textContent="A reunião está começando";
+    document.getElementById("label").textContent="Horário de início";
+    document.getElementById("time").textContent=HORARIO_INICIO;
+    document.getElementById("status").textContent="Vamos começar";
+    return;
+  }
+
+  const total=Math.floor(diferenca/1000);
+  const minutos=Math.floor(total/60);
+  const segundos=total%60;
+
+  document.getElementById("time").textContent=
+    String(minutos).padStart(2,"0")+":"+String(segundos).padStart(2,"0");
+
+  document.getElementById("label").textContent="Início previsto às "+HORARIO_INICIO;
+}
+atualizar();
+setInterval(atualizar,1000);
+</script>
+</body>
+</html>
