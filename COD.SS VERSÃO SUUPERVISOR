@@ -1,0 +1,2898 @@
+/**
+
+ * PAINEL DO SUPERVISOR - Code.gs
+
+ *
+
+ * Esta versão mantém o restante do projeto e corrige somente a leitura
+
+ * do bloco RANKING, respeitando a estrutura REAL da aba:
+
+ *
+
+ * MULTISKILL
+
+ * A = NOME
+
+ * B = CERTIFICAÇÃO
+
+ * C = POSIÇÃO RELATIVA
+
+ * D = POSIÇÃO
+
+ * E = COORDENADOR
+
+ * F = GERENTE
+
+ * G = MÊS
+
+ *
+
+ * RECOLHIMENTO
+
+ * I = NOME
+
+ * J = CERTIFICAÇÃO
+
+ * K = POSIÇÃO RELATIVA
+
+ * L = POSIÇÃO
+
+ * M = COORDENADOR
+
+ * N = GERENTE
+
+ * O = MÊS
+
+ *
+
+ * H é a coluna separadora entre os dois blocos.
+
+ */
+
+
+
+function doGet(e) {
+
+  try {
+
+    var pagina = e && e.parameter
+      ? String(e.parameter.page || '').trim().toLowerCase()
+      : '';
+
+    // Monitoramento: somente Laíze pode acessar.
+    if (pagina === 'monitoramento') {
+      validarAdminMonitoramento_();
+
+      return HtmlService.createHtmlOutputFromFile('Monitoramento')
+        .setTitle('Monitoramento de Acessos')
+        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+        .addMetaTag('viewport', 'width=device-width, initial-scale=1');
+    }
+
+    // Painel principal
+    var email = validarAcesso_();
+
+    // Registra o acesso somente depois da validação.
+    registrarAcesso_(email);
+
+    return HtmlService.createHtmlOutputFromFile('Index')
+      .setTitle('Painel do Supervisor - Dashboard')
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+      .addMetaTag('viewport', 'width=device-width, initial-scale=1');
+
+  } catch (erro) {
+
+    return HtmlService.createHtmlOutput(
+      criarPaginaAcessoNegado_(erro.message)
+    )
+      .setTitle('Acesso Restrito - Painel do Supervisor')
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+      .addMetaTag('viewport', 'width=device-width, initial-scale=1');
+
+  }
+
+}
+
+
+
+/**
+
+ * Valida o usuário logado contra a aba ACESSOS.
+
+ * A coluna A deve conter o cabeçalho EMAIL CORPORATIVO e, a partir da linha 2,
+
+ * os e-mails autorizados.
+
+ *
+
+ * IMPORTANTE: usa o usuário ativo da sessão Google.
+
+ */
+
+function validarAcesso_() {
+
+
+
+  var email = String(Session.getActiveUser().getEmail() || '')
+
+    .trim()
+
+    .toLowerCase();
+
+
+
+  if (!email) {
+
+    throw new Error('Não foi possível identificar sua conta Google corporativa.');
+
+  }
+
+
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  var sheetAcessos = ss.getSheetByName('ACESSOS');
+
+
+
+  if (!sheetAcessos) {
+
+    throw new Error('A aba ACESSOS não foi encontrada.');
+
+  }
+
+
+
+  var lastRow = sheetAcessos.getLastRow();
+
+
+
+  if (lastRow < 2) {
+
+    throw new Error('A lista de acessos está vazia.');
+
+  }
+
+
+
+  var emails = sheetAcessos
+
+    .getRange(2, 1, lastRow - 1, 1)
+
+    .getDisplayValues();
+
+
+
+  for (var i = 0; i < emails.length; i++) {
+
+
+
+    var emailAutorizado = String(emails[i][0] || '')
+
+      .trim()
+
+      .toLowerCase();
+
+
+
+    if (emailAutorizado && emailAutorizado === email) {
+
+      return email;
+
+    }
+
+
+
+  }
+
+
+
+  throw new Error('Seu e-mail não está autorizado para acessar este painel.');
+
+
+
+}
+
+
+
+
+
+/**
+
+ * Retorna uma página de bloqueio amigável quando o usuário não está autorizado.
+
+ */
+
+function criarPaginaAcessoNegado_(mensagem) {
+
+
+
+  var detalhe = String(mensagem || 'Acesso não autorizado.');
+
+
+
+  return '<!DOCTYPE html>' +
+
+    '<html lang="pt-BR"><head>' +
+
+    '<meta charset="UTF-8">' +
+
+    '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+
+    '<title>Acesso Restrito</title>' +
+
+    '<style>' +
+
+      '*{box-sizing:border-box}' +
+
+      'html,body{margin:0;width:100%;height:100%;font-family:Arial,Helvetica,sans-serif}' +
+
+      'body{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f5f6f8,#ffffff);color:#263238;padding:24px}' +
+
+      '.card{width:min(560px,100%);background:#fff;border:1px solid #e5e7eb;border-radius:22px;padding:42px 36px;text-align:center;box-shadow:0 18px 50px rgba(31,38,46,.12)}' +
+
+      '.icon{width:68px;height:68px;margin:0 auto 20px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff0df;color:#e65100;font-size:32px}' +
+
+      'h1{margin:0 0 10px;font-size:25px;color:#263238}' +
+
+      'p{margin:8px 0;color:#667085;line-height:1.55;font-size:15px}' +
+
+      '.msg{margin-top:18px;padding:12px 14px;border-radius:12px;background:#f8f9fa;color:#667085;font-size:13px}' +
+
+      '.brand{margin-top:26px;font-size:12px;color:#98a2b3}' +
+
+      '.brand strong{color:#e65100}' +
+
+    '</style></head><body>' +
+
+    '<div class="card">' +
+
+      '<div class="icon">🔒</div>' +
+
+      '<h1>Acesso Restrito</h1>' +
+
+      '<p>Seu usuário não possui permissão para acessar o <strong>Painel do Supervisor</strong>.</p>' +
+
+      '<p>Se você precisa de acesso, entre em contato com a gestão responsável pelo painel.</p>' +
+
+      '<div class="msg">' + escapeHtml_(detalhe) + '</div>' +
+
+      '<div class="brand">Painel do Supervisor • <strong>Grupo Brisanet</strong></div>' +
+
+    '</div></body></html>';
+
+
+
+}
+
+
+
+
+
+function escapeHtml_(texto) {
+
+
+
+  return String(texto || '')
+
+    .replace(/&/g, '&amp;')
+
+    .replace(/</g, '&lt;')
+
+    .replace(/>/g, '&gt;')
+
+    .replace(/"/g, '&quot;')
+
+    .replace(/'/g, '&#39;');
+
+
+
+}
+
+
+
+
+
+/**
+
+ * Busca todos os dados das abas e envia para o Front-end.
+
+ */
+
+function getDashboardData() {
+
+
+
+  validarAcesso_();
+
+
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+
+
+  var sheetRaioX                = ss.getSheetByName("RAIO X");
+
+  var sheetPcc                  = ss.getSheetByName("PPC");
+
+  var sheetTam                  = ss.getSheetByName("TAM");
+
+  var sheetAbst                 = ss.getSheetByName("TAM ABST/CLIENTE");
+
+  var sheetKml                  = ss.getSheetByName("TAM KM/L");
+
+  var sheetAcidentes            = ss.getSheetByName("ACIDENTES");
+
+  var sheetInspecao             = ss.getSheetByName("INSPEÇÕES");
+
+  var sheetTratarPt             = ss.getSheetByName("TRATAR PONTO");
+
+  var sheetBhHe                 = ss.getSheetByName("BH + HE");
+
+  var sheetGpsPonto             = ss.getSheetByName("GPS PONTO");
+
+  var sheetRecorrencia          = ss.getSheetByName("RECORRÊNCIA") ||
+
+                                  ss.getSheetByName("RECORRENCIA");
+
+  var sheetMaterial              = ss.getSheetByName("MATERIAL");
+
+  var sheetIndicadoresCidades    = ss.getSheetByName("INDICADORES CIDADES");
+
+  var sheetRanking               = ss.getSheetByName("RANKING");
+
+  var sheetQuartil4              = ss.getSheetByName("4º QUARTIL");
+
+  var sheetImprodutiva           = ss.getSheetByName("IMPRODUTIVA");
+
+  var sheetInstaladosEfetivados  = ss.getSheetByName("INSTALADOS X EFETIVADOS");
+
+
+
+
+
+  var raioxData = sheetRaioX
+
+    ? getSheetData(sheetRaioX)
+
+    : [];
+
+
+
+  /*
+
+   * IMPORTANTE:
+
+   * A foto é separada dos demais dados do RAIO X.
+
+   * Assim ela NÃO fica dependente do filtro mensal do ranking.
+
+   */
+
+  var fotosRaioXData = sheetRaioX
+
+    ? getFotosRaioX(sheetRaioX)
+
+    : [];
+
+
+
+
+
+  var pccData = sheetPcc
+
+    ? getSheetData(sheetPcc)
+
+    : [];
+
+
+
+  var tamData = sheetTam
+
+    ? getSheetData(sheetTam)
+
+    : [];
+
+
+
+  var abstData = sheetAbst
+
+    ? getSheetData(sheetAbst)
+
+    : [];
+
+
+
+  var kmlData = sheetKml
+
+    ? getSheetData(sheetKml)
+
+    : [];
+
+
+
+  var acidentesData = sheetAcidentes
+
+    ? getSheetData(sheetAcidentes)
+
+    : [];
+
+
+
+  var inspecaoData = sheetInspecao
+
+    ? getSheetData(sheetInspecao)
+
+    : [];
+
+
+
+  var tratarPtData = sheetTratarPt
+
+    ? getSheetData(sheetTratarPt)
+
+    : [];
+
+
+
+  var bhHeData = sheetBhHe
+
+    ? getSheetData(sheetBhHe)
+
+    : [];
+
+
+
+  var gpsPontoData = sheetGpsPonto
+
+    ? getSheetData(sheetGpsPonto)
+
+    : [];
+
+
+
+  var recorrenciaData = sheetRecorrencia
+
+    ? getSheetData(sheetRecorrencia)
+
+    : [];
+
+
+
+  var materialData = sheetMaterial
+
+    ? getSheetData(sheetMaterial)
+
+    : [];
+
+
+
+  var indicadoresCidadesData = sheetIndicadoresCidades
+
+    ? getSheetData(sheetIndicadoresCidades)
+
+    : [];
+
+
+
+  var quartil4Data = sheetQuartil4
+
+    ? getSheetData(sheetQuartil4)
+
+    : [];
+
+
+
+  var improdutivaData = sheetImprodutiva
+
+    ? getSheetData(sheetImprodutiva)
+
+    : [];
+
+
+
+  var instaladosEfetivadosData = sheetInstaladosEfetivados
+
+    ? getSheetData(sheetInstaladosEfetivados)
+
+    : [];
+
+
+
+
+
+  var rankingData = sheetRanking
+
+    ? getRankingData(sheetRanking)
+
+    : {
+
+        multiskill: [],
+
+        recolhimento: [],
+
+        totais: {
+
+          multiskill: 0,
+
+          recolhimento: 0
+
+        },
+
+        totaisPorMes: {}
+
+      };
+
+
+
+
+
+  return JSON.stringify({
+
+
+
+    raiox: raioxData,
+
+
+
+    /*
+
+     * MAPA INDEPENDENTE DAS FOTOS DA RAIO X.
+
+     * Não possui mês e não sofre filtro mensal.
+
+     */
+
+    fotosRaioX: fotosRaioXData,
+
+
+
+    pcc: pccData,
+
+
+
+    tam: tamData,
+
+
+
+    abst: abstData,
+
+
+
+    kml: kmlData,
+
+
+
+    acidentes: acidentesData,
+
+
+
+    inspecao: inspecaoData,
+
+
+
+    tratarPonto: tratarPtData,
+
+
+
+    bhHe: bhHeData,
+
+
+
+    gpsPonto: gpsPontoData,
+
+
+
+    recorrencia: recorrenciaData,
+
+
+
+    material: materialData,
+
+
+
+    indicadoresCidades: indicadoresCidadesData,
+
+
+
+    quartil4: quartil4Data,
+
+
+
+    improdutiva: improdutivaData,
+
+
+
+    instaladosEfetivados: instaladosEfetivadosData,
+
+
+
+    ranking: rankingData
+
+
+
+  });
+
+
+
+}
+
+
+
+
+
+/**
+
+ * Lê a aba RANKING usando as colunas reais.
+
+ *
+
+ * MULTISKILL:
+
+ * A = NOME
+
+ * B = CERTIFICAÇÃO
+
+ * C = POSIÇÃO RELATIVA
+
+ * D = POSIÇÃO
+
+ * E = COORDENADOR
+
+ * F = GERENTE
+
+ * G = MÊS
+
+ *
+
+ * RECOLHIMENTO:
+
+ * I = NOME
+
+ * J = CERTIFICAÇÃO
+
+ * K = POSIÇÃO RELATIVA
+
+ * L = POSIÇÃO
+
+ * M = COORDENADOR
+
+ * N = GERENTE
+
+ * O = MÊS
+
+ */
+
+function getRankingData(sheet) {
+
+
+
+  var lastRow = sheet.getLastRow();
+
+
+
+  var lastCol = Math.max(
+
+    sheet.getLastColumn(),
+
+    15
+
+  );
+
+
+
+
+
+  if (lastRow < 3) {
+
+
+
+    return {
+
+      multiskill: [],
+
+      recolhimento: [],
+
+      totais: {
+
+        multiskill: 0,
+
+        recolhimento: 0
+
+      },
+
+      totaisPorMes: {}
+
+    };
+
+
+
+  }
+
+
+
+
+
+  var values = sheet
+
+    .getRange(1, 1, lastRow, lastCol)
+
+    .getDisplayValues();
+
+
+
+
+
+  function normalizarCabecalho(v) {
+
+
+
+    return String(v || '')
+
+      .normalize('NFD')
+
+      .replace(/[\u0300-\u036f]/g, '')
+
+      .trim()
+
+      .toUpperCase();
+
+
+
+  }
+
+
+
+
+
+  function numeroDaPosicao(valor) {
+
+
+
+    var m = String(valor || '').match(/\d+/);
+
+
+
+    return m
+
+      ? parseInt(m[0], 10)
+
+      : 999999;
+
+
+
+  }
+
+
+
+
+
+  function normalizarMes(valor) {
+
+
+
+    return String(valor || '').trim();
+
+
+
+  }
+
+
+
+
+
+  var headerRow = 1;
+
+
+
+  var dataStart = 2;
+
+
+
+
+
+  for (
+
+    var r = 0;
+
+    r < Math.min(values.length, 10);
+
+    r++
+
+  ) {
+
+
+
+    var a = normalizarCabecalho(values[r][0]);
+
+    var b = normalizarCabecalho(values[r][1]);
+
+    var c = normalizarCabecalho(values[r][2]);
+
+
+
+    var i = normalizarCabecalho(values[r][8]);
+
+    var j = normalizarCabecalho(values[r][9]);
+
+    var k = normalizarCabecalho(values[r][10]);
+
+
+
+
+
+    if (
+
+      (
+
+        a === 'NOME' &&
+
+        b === 'CERTIFICACAO' &&
+
+        c === 'POSICAO'
+
+      )
+
+      ||
+
+      (
+
+        i === 'NOME' &&
+
+        j === 'CERTIFICACAO' &&
+
+        k === 'POSICAO'
+
+      )
+
+    ) {
+
+
+
+      headerRow = r;
+
+
+
+      dataStart = r + 1;
+
+
+
+      break;
+
+
+
+    }
+
+
+
+  }
+
+
+
+
+
+  function montarLista(
+
+    colNome,
+
+    colCert,
+
+    colPosicao,
+
+    colCoordenador,
+
+    colGerente,
+
+    colMes
+
+  ) {
+
+
+
+    var lista = [];
+
+
+
+
+
+    for (
+
+      var r = dataStart;
+
+      r < values.length;
+
+      r++
+
+    ) {
+
+
+
+      var row = values[r];
+
+
+
+      var nome = String(
+
+        row[colNome] || ''
+
+      ).trim();
+
+
+
+      var certificacao = String(
+
+        row[colCert] || ''
+
+      ).trim();
+
+
+
+      var posicao = String(
+
+        row[colPosicao] || ''
+
+      ).trim();
+
+
+
+      var mes = normalizarMes(
+
+        row[colMes]
+
+      );
+
+
+
+
+
+      if (
+
+        !nome ||
+
+        !posicao ||
+
+        numeroDaPosicao(posicao) === 999999
+
+      ) {
+
+
+
+        continue;
+
+
+
+      }
+
+
+
+
+
+      lista.push({
+
+
+
+        nome: nome,
+
+
+
+        certificacao: certificacao,
+
+
+
+        posicao: posicao,
+
+
+
+        coordenador: String(
+
+          row[colCoordenador] || ''
+
+        ).trim(),
+
+
+
+        gerente: String(
+
+          row[colGerente] || ''
+
+        ).trim(),
+
+
+
+        mes: mes
+
+
+
+      });
+
+
+
+    }
+
+
+
+
+
+    lista.sort(function(a, b) {
+
+
+
+      var pa = numeroDaPosicao(
+
+        a.posicao
+
+      );
+
+
+
+      var pb = numeroDaPosicao(
+
+        b.posicao
+
+      );
+
+
+
+
+
+      if (pa !== pb) {
+
+
+
+        return pa - pb;
+
+
+
+      }
+
+
+
+
+
+      return a.nome.localeCompare(
+
+        b.nome,
+
+        'pt-BR'
+
+      );
+
+
+
+    });
+
+
+
+
+
+    return lista;
+
+
+
+  }
+
+
+
+
+
+  /*
+
+   * MULTISKILL:
+
+   * A, B, D, E, F, G
+
+   */
+
+  var multiskill = montarLista(
+
+    0,
+
+    1,
+
+    3,
+
+    4,
+
+    5,
+
+    6
+
+  );
+
+
+
+
+
+  /*
+
+   * RECOLHIMENTO:
+
+   * I, J, L, M, N, O
+
+   */
+
+  var recolhimento = montarLista(
+
+    8,
+
+    9,
+
+    11,
+
+    12,
+
+    13,
+
+    14
+
+  );
+
+
+
+
+
+  var totalMultiskill =
+
+    numeroInteiro(
+
+      values[headerRow][3]
+
+    );
+
+
+
+
+
+  var totalRecolhimento =
+
+    numeroInteiro(
+
+      values[headerRow][11]
+
+    );
+
+
+
+
+
+  if (!totalMultiskill) {
+
+
+
+    totalMultiskill =
+
+      multiskill.length;
+
+
+
+  }
+
+
+
+
+
+  if (!totalRecolhimento) {
+
+
+
+    totalRecolhimento =
+
+      recolhimento.length;
+
+
+
+  }
+
+
+
+
+
+  /*
+
+   * Totais separados por mês.
+
+   */
+
+  var totaisPorMes = {};
+
+
+
+
+
+  function registrarTotaisPorMes(lista) {
+
+
+
+    lista.forEach(function(item) {
+
+
+
+      var mes = item.mes;
+
+
+
+      if (!mes) return;
+
+
+
+
+
+      if (!totaisPorMes[mes]) {
+
+
+
+        totaisPorMes[mes] = {
+
+
+
+          multiskill: 0,
+
+
+
+          recolhimento: 0
+
+
+
+        };
+
+
+
+      }
+
+
+
+    });
+
+
+
+  }
+
+
+
+
+
+  registrarTotaisPorMes(
+
+    multiskill
+
+  );
+
+
+
+  registrarTotaisPorMes(
+
+    recolhimento
+
+  );
+
+
+
+
+
+  /*
+
+   * Usa o denominador existente em
+
+   * "1º/81", "1º/30" etc.
+
+   */
+
+  function atualizarTotalDaLista(
+
+    lista,
+
+    tipo
+
+  ) {
+
+
+
+    lista.forEach(function(item) {
+
+
+
+      if (!item.mes) return;
+
+
+
+
+
+      var partes = String(
+
+        item.posicao
+
+      ).split('/');
+
+
+
+
+
+      var total =
+
+        partes.length > 1
+
+          ? numeroInteiro(
+
+              partes[1]
+
+            )
+
+          : 0;
+
+
+
+
+
+      if (total > 0) {
+
+
+
+        totaisPorMes[
+
+          item.mes
+
+        ][tipo] = Math.max(
+
+          totaisPorMes[
+
+            item.mes
+
+          ][tipo],
+
+          total
+
+        );
+
+
+
+      }
+
+
+
+    });
+
+
+
+  }
+
+
+
+
+
+  atualizarTotalDaLista(
+
+    multiskill,
+
+    'multiskill'
+
+  );
+
+
+
+  atualizarTotalDaLista(
+
+    recolhimento,
+
+    'recolhimento'
+
+  );
+
+
+
+
+
+  /*
+
+   * Se não houver denominador,
+
+   * usa a quantidade de registros.
+
+   */
+
+  Object.keys(
+
+    totaisPorMes
+
+  ).forEach(function(mes) {
+
+
+
+    if (
+
+      !totaisPorMes[mes]
+
+        .multiskill
+
+    ) {
+
+
+
+      totaisPorMes[mes]
+
+        .multiskill =
+
+        multiskill.filter(
+
+          function(item) {
+
+
+
+            return item.mes === mes;
+
+
+
+          }
+
+        ).length;
+
+
+
+    }
+
+
+
+
+
+    if (
+
+      !totaisPorMes[mes]
+
+        .recolhimento
+
+    ) {
+
+
+
+      totaisPorMes[mes]
+
+        .recolhimento =
+
+        recolhimento.filter(
+
+          function(item) {
+
+
+
+            return item.mes === mes;
+
+
+
+          }
+
+        ).length;
+
+
+
+    }
+
+
+
+  });
+
+
+
+
+
+  return {
+
+
+
+    multiskill: multiskill,
+
+
+
+    recolhimento: recolhimento,
+
+
+
+    totais: {
+
+
+
+      multiskill:
+
+        totalMultiskill,
+
+
+
+      recolhimento:
+
+        totalRecolhimento
+
+
+
+    },
+
+
+
+    totaisPorMes:
+
+      totaisPorMes
+
+
+
+  };
+
+
+
+}
+
+
+
+
+
+function numeroInteiro(valor) {
+
+
+
+  var texto = String(
+
+    valor || ''
+
+  ).replace(/\D/g, '');
+
+
+
+
+
+  var numero = parseInt(
+
+    texto,
+
+    10
+
+  );
+
+
+
+
+
+  return isFinite(numero)
+
+    ? numero
+
+    : 0;
+
+
+
+}
+
+
+
+
+
+/**
+
+ * ============================================================
+
+ * FOTOS DA RAIO X
+
+ * ============================================================
+
+ *
+
+ * Cria uma lista independente das fotos.
+
+ *
+
+ * Essa lista NÃO possui mês.
+
+ *
+
+ * Portanto:
+
+ *
+
+ * RANKING = filtrado por mês
+
+ * FOTO    = buscada na RAIO X completa
+
+ *
+
+ * Isso evita que setembro/outubro façam
+
+ * a foto desaparecer.
+
+ */
+
+function getFotosRaioX(sheet) {
+
+
+
+  var range =
+
+    sheet.getDataRange();
+
+
+
+
+
+  var values =
+
+    range.getValues();
+
+
+
+
+
+  var displayValues =
+
+    range.getDisplayValues();
+
+
+
+
+
+  var formulas =
+
+    range.getFormulas();
+
+
+
+
+
+  if (
+
+    !values ||
+
+    values.length < 2
+
+  ) {
+
+
+
+    return [];
+
+
+
+  }
+
+
+
+
+
+  function normalizarCabecalhoFoto_(
+
+    valor
+
+  ) {
+
+
+
+    return String(
+
+      valor || ''
+
+    )
+
+      .normalize('NFD')
+
+      .replace(
+
+        /[\u0300-\u036f]/g,
+
+        ''
+
+      )
+
+      .trim()
+
+      .toUpperCase();
+
+
+
+  }
+
+
+
+
+
+  function pareceUrlFoto_(
+
+    valor
+
+  ) {
+
+
+
+    var texto = String(
+
+      valor || ''
+
+    ).trim();
+
+
+
+
+
+    return (
+
+      /^https?:\/\//i.test(
+
+        texto
+
+      )
+
+      ||
+
+      /^data:image\//i.test(
+
+        texto
+
+      )
+
+    );
+
+
+
+  }
+
+
+
+
+
+  function extrairUrlFormula_(
+
+    formula
+
+  ) {
+
+
+
+    var texto = String(
+
+      formula || ''
+
+    ).trim();
+
+
+
+
+
+    if (!texto) {
+
+
+
+      return '';
+
+
+
+    }
+
+
+
+
+
+    /*
+
+     * Trata:
+
+     *
+
+     * =IMAGE("https\://...")
+
+     */
+
+    var match = texto.match(
+
+      /IMAGE\s*\(\s*["']([^"']+)["'](?:\s*[,;][^)]*)?\)/i
+
+    );
+
+
+
+
+
+    if (
+
+      match &&
+
+      match[1]
+
+    ) {
+
+
+
+      return match[1].trim();
+
+
+
+    }
+
+
+
+
+
+    /*
+
+     * Trata casos onde a URL
+
+     * aparece diretamente.
+
+     */
+
+    match = texto.match(
+
+      /IMAGE\s*\(\s*([^,;)]+)(?:\s*[,;][^)]*)?\)/i
+
+    );
+
+
+
+
+
+    if (
+
+      match &&
+
+      match[1]
+
+    ) {
+
+
+
+      var referencia =
+
+        String(
+
+          match[1]
+
+        ).trim();
+
+
+
+
+
+      if (
+
+        /^https?:\/\//i.test(
+
+          referencia
+
+        )
+
+      ) {
+
+
+
+        return referencia;
+
+
+
+      }
+
+
+
+    }
+
+
+
+
+
+    return '';
+
+
+
+  }
+
+
+
+
+
+  var headers =
+
+    values[0];
+
+
+
+
+
+  var nomeCol = -1;
+
+
+
+  var fotoCols = [];
+
+
+
+
+
+  var nomesAceitos = {
+
+
+
+    'NOME': true,
+
+
+
+    'NOME COMPLETO': true,
+
+
+
+    'COLABORADOR': true,
+
+
+
+    'FUNCIONARIO': true,
+
+
+
+    'FUNCIONÁRIO': true
+
+
+
+  };
+
+
+
+
+
+  var fotosAceitas = {
+
+
+
+    'FOTO': true,
+
+
+
+    'FOTO 2': true,
+
+
+
+    'FOTO2': true,
+
+
+
+    'LINK FOTO': true,
+
+
+
+    'URL FOTO': true,
+
+
+
+    'URL DA FOTO': true,
+
+
+
+    'LINK DA FOTO': true,
+
+
+
+    'IMAGEM': true,
+
+
+
+    'IMAGE': true,
+
+
+
+    'PHOTO': true,
+
+
+
+    'PICTURE': true
+
+
+
+  };
+
+
+
+
+
+  for (
+
+    var c = 0;
+
+    c < headers.length;
+
+    c++
+
+  ) {
+
+
+
+    var header =
+
+      normalizarCabecalhoFoto_(
+
+        headers[c]
+
+      );
+
+
+
+
+
+    if (
+
+      nomeCol === -1 &&
+
+      nomesAceitos[header]
+
+    ) {
+
+
+
+      nomeCol = c;
+
+
+
+    }
+
+
+
+
+
+    if (
+
+      fotosAceitas[header]
+
+    ) {
+
+
+
+      fotoCols.push(c);
+
+
+
+    }
+
+
+
+  }
+
+
+
+
+
+  if (nomeCol === -1) {
+
+
+
+    return [];
+
+
+
+  }
+
+
+
+
+
+  var resultado = [];
+
+
+
+
+
+  for (
+
+    var r = 1;
+
+    r < values.length;
+
+    r++
+
+  ) {
+
+
+
+    var nome = String(
+
+      displayValues[r][nomeCol] ||
+
+      values[r][nomeCol] ||
+
+      ''
+
+    ).trim();
+
+
+
+
+
+    if (!nome) {
+
+
+
+      continue;
+
+
+
+    }
+
+
+
+
+
+    var foto = '';
+
+
+
+
+
+    /*
+
+     * Procura a foto nas colunas
+
+     * identificadas.
+
+     */
+
+    for (
+
+      var f = 0;
+
+      f < fotoCols.length;
+
+      f++
+
+    ) {
+
+
+
+      var col =
+
+        fotoCols[f];
+
+
+
+
+
+      var valorDisplay =
+
+        String(
+
+          displayValues[r][col] ||
+
+          ''
+
+        ).trim();
+
+
+
+
+
+      var valorRaw =
+
+        String(
+
+          values[r][col] ||
+
+          ''
+
+        ).trim();
+
+
+
+
+
+      var valorFormula =
+
+        String(
+
+          formulas[r][col] ||
+
+          ''
+
+        ).trim();
+
+
+
+
+
+      if (
+
+        pareceUrlFoto_(
+
+          valorDisplay
+
+        )
+
+      ) {
+
+
+
+        foto =
+
+          valorDisplay;
+
+
+
+        break;
+
+
+
+      }
+
+
+
+
+
+      if (
+
+        pareceUrlFoto_(
+
+          valorRaw
+
+        )
+
+      ) {
+
+
+
+        foto =
+
+          valorRaw;
+
+
+
+        break;
+
+
+
+      }
+
+
+
+
+
+      var urlFormula =
+
+        extrairUrlFormula_(
+
+          valorFormula
+
+        );
+
+
+
+
+
+      if (urlFormula) {
+
+
+
+        foto =
+
+          urlFormula;
+
+
+
+        break;
+
+
+
+      }
+
+
+
+    }
+
+
+
+
+
+    resultado.push({
+
+
+
+      nome: nome,
+
+
+
+      foto: foto
+
+
+
+    });
+
+
+
+  }
+
+
+
+
+
+  return resultado;
+
+
+
+}
+
+
+
+
+
+/**
+
+ * Converte uma aba em Array de Objetos JSON.
+
+ */
+
+function getSheetData(sheet) {
+
+
+
+  var data =
+
+    sheet.getDataRange()
+
+      .getValues();
+
+
+
+
+
+  var displayData =
+
+    sheet.getDataRange()
+
+      .getDisplayValues();
+
+
+
+
+
+  if (
+
+    data.length < 2
+
+  ) {
+
+
+
+    return [];
+
+
+
+  }
+
+
+
+
+
+  var headers =
+
+    data[0];
+
+
+
+
+
+  var result = [];
+
+
+
+
+
+  for (
+
+    var i = 1;
+
+    i < data.length;
+
+    i++
+
+  ) {
+
+
+
+    var row =
+
+      data[i];
+
+
+
+
+
+    var displayRow =
+
+      displayData[i];
+
+
+
+
+
+    var obj = {};
+
+
+
+    var hasContent = false;
+
+
+
+
+
+    for (
+
+      var j = 0;
+
+      j < headers.length;
+
+      j++
+
+    ) {
+
+
+
+      var headerName =
+
+        String(
+
+          headers[j]
+
+        ).trim();
+
+
+
+
+
+      if (
+
+        headerName !== ''
+
+      ) {
+
+
+
+        var rawVal =
+
+          row[j];
+
+
+
+
+
+        var displayVal =
+
+          displayRow[j];
+
+
+
+
+
+        var cellValue =
+
+          rawVal;
+
+
+
+
+
+        if (
+
+          rawVal instanceof Date
+
+        ) {
+
+
+
+          if (
+
+            rawVal.getFullYear() ===
+
+            1899
+
+          ) {
+
+
+
+            cellValue =
+
+              displayVal;
+
+
+
+          } else {
+
+
+
+            cellValue =
+
+              Utilities.formatDate(
+
+                rawVal,
+
+                Session.getScriptTimeZone(),
+
+                'yyyy-MM-dd'
+
+              );
+
+
+
+          }
+
+
+
+        } else if (
+
+          typeof rawVal === 'string' &&
+
+          rawVal.trim() === ''
+
+        ) {
+
+
+
+          cellValue =
+
+            displayVal;
+
+
+
+        }
+
+
+
+
+
+        obj[headerName] =
+
+          cellValue;
+
+
+
+
+
+        if (
+
+          cellValue !== '' &&
+
+          cellValue !== null &&
+
+          cellValue !== undefined
+
+        ) {
+
+
+
+          hasContent =
+
+            true;
+
+
+
+        }
+
+
+
+      }
+
+
+
+    }
+
+
+
+
+
+    if (hasContent) {
+
+
+
+      result.push(obj);
+
+
+
+    }
+
+
+
+  }
+
+
+
+
+
+  return result;
+
+
+
+}
+
+/**
+ * E-mail autorizado a acessar o Monitoramento.
+ */
+var EMAIL_ADMIN_MONITORAMENTO_ = 'laize.beserra@grupobrisanet.com.br';
+
+
+/**
+ * Valida o acesso à página administrativa.
+ */
+function validarAdminMonitoramento_() {
+
+  var email = String(Session.getActiveUser().getEmail() || '')
+    .trim()
+    .toLowerCase();
+
+  if (!email) {
+    throw new Error(
+      'Não foi possível identificar sua conta Google corporativa.'
+    );
+  }
+
+  if (email !== EMAIL_ADMIN_MONITORAMENTO_) {
+    throw new Error(
+      'Você não possui permissão para acessar o Monitoramento de Acessos.'
+    );
+  }
+
+  return email;
+}
+
+
+/**
+ * Registra cada abertura do painel principal.
+ *
+ * Cria automaticamente a aba LOG_ACESSOS se ela ainda não existir.
+ *
+ * Colunas:
+ * A = DATA
+ * B = HORA
+ * C = E-MAIL
+ * D = COLABORADOR
+ */
+function registrarAcesso_(email) {
+
+  try {
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheetAcessos = ss.getSheetByName('ACESSOS');
+
+    if (!sheetAcessos) {
+      return;
+    }
+
+    var sheetLog = ss.getSheetByName('LOG_ACESSOS');
+
+    if (!sheetLog) {
+      sheetLog = ss.insertSheet('LOG_ACESSOS');
+
+      sheetLog.getRange(1, 1, 1, 4).setValues([[
+        'DATA',
+        'HORA',
+        'E-MAIL',
+        'COLABORADOR'
+      ]]);
+
+      sheetLog.getRange(1, 1, 1, 4)
+        .setFontWeight('bold');
+
+      sheetLog.setFrozenRows(1);
+    }
+
+    var emailNormalizado = String(email || '')
+      .trim()
+      .toLowerCase();
+
+    var nome = '';
+    var lastRow = sheetAcessos.getLastRow();
+
+    if (lastRow >= 2) {
+
+      var dados = sheetAcessos
+        .getRange(2, 1, lastRow - 1, 2)
+        .getDisplayValues();
+
+      for (var i = 0; i < dados.length; i++) {
+
+        var emailAcessos = String(dados[i][0] || '')
+          .trim()
+          .toLowerCase();
+
+        if (emailAcessos === emailNormalizado) {
+          nome = String(dados[i][1] || '').trim();
+          break;
+        }
+      }
+    }
+
+    var agora = new Date();
+    var timezone = Session.getScriptTimeZone();
+
+    var data = Utilities.formatDate(
+      agora,
+      timezone,
+      'dd/MM/yyyy'
+    );
+
+    var hora = Utilities.formatDate(
+      agora,
+      timezone,
+      'HH:mm:ss'
+    );
+
+    sheetLog.appendRow([
+      data,
+      hora,
+      emailNormalizado,
+      nome
+    ]);
+
+  } catch (erro) {
+
+    // O registro de acesso não pode impedir a abertura do painel.
+    console.error(
+      'Erro ao registrar acesso: ' + erro.message
+    );
+  }
+}
+
+
+/**
+ * Retorna os dados do monitoramento.
+ * Somente o e-mail administrativo pode executar esta função.
+ */
+function getMonitoramentoData() {
+
+  validarAdminMonitoramento_();
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheetAcessos = ss.getSheetByName('ACESSOS');
+  var sheetLog = ss.getSheetByName('LOG_ACESSOS');
+
+  if (!sheetAcessos) {
+    throw new Error('A aba ACESSOS não foi encontrada.');
+  }
+
+  var totalAutorizados = 0;
+  var autorizados = {};
+  var lastRowAcessos = sheetAcessos.getLastRow();
+
+  if (lastRowAcessos >= 2) {
+
+    var dadosAcessos = sheetAcessos
+      .getRange(2, 1, lastRowAcessos - 1, 2)
+      .getDisplayValues();
+
+    dadosAcessos.forEach(function(row) {
+
+      var email = String(row[0] || '')
+        .trim()
+        .toLowerCase();
+
+      var nome = String(row[1] || '').trim();
+
+      if (!email) return;
+
+      totalAutorizados++;
+
+      autorizados[email] = {
+        email: email,
+        nome: nome
+      };
+    });
+  }
+
+  var acessosHoje = [];
+  var emailsQueAcessaramHoje = {};
+
+  if (sheetLog && sheetLog.getLastRow() >= 2) {
+
+    var dadosLog = sheetLog
+      .getRange(2, 1, sheetLog.getLastRow() - 1, 4)
+      .getDisplayValues();
+
+    var hoje = Utilities.formatDate(
+      new Date(),
+      Session.getScriptTimeZone(),
+      'dd/MM/yyyy'
+    );
+
+    dadosLog.forEach(function(row) {
+
+      var data = String(row[0] || '').trim();
+
+      if (data !== hoje) return;
+
+      var hora = String(row[1] || '').trim();
+      var email = String(row[2] || '')
+        .trim()
+        .toLowerCase();
+      var nome = String(row[3] || '').trim();
+
+      if (!email) return;
+
+      emailsQueAcessaramHoje[email] = true;
+
+      acessosHoje.push({
+        data: data,
+        hora: hora,
+        email: email,
+        nome: nome
+      });
+    });
+  }
+
+  acessosHoje.sort(function(a, b) {
+    return String(b.hora).localeCompare(String(a.hora));
+  });
+
+  var naoAcessaramHoje = [];
+
+  Object.keys(autorizados).forEach(function(email) {
+
+    if (!emailsQueAcessaramHoje[email]) {
+
+      naoAcessaramHoje.push({
+        email: autorizados[email].email,
+        nome: autorizados[email].nome
+      });
+    }
+  });
+
+  naoAcessaramHoje.sort(function(a, b) {
+    return String(a.nome).localeCompare(
+      String(b.nome),
+      'pt-BR'
+    );
+  });
+
+  var ultimoAcesso = acessosHoje.length
+    ? acessosHoje[0]
+    : null;
+
+  // Volume de acessos do mês atual, do dia 01 até hoje.
+  var agora = new Date();
+  var timezone = Session.getScriptTimeZone();
+  var mesAtual = Utilities.formatDate(agora, timezone, 'MM');
+  var anoAtual = Utilities.formatDate(agora, timezone, 'yyyy');
+  var diaAtual = Number(Utilities.formatDate(agora, timezone, 'dd'));
+
+  var volumePorDia = {};
+
+  for (var dia = 1; dia <= diaAtual; dia++) {
+    volumePorDia[dia] = 0;
+  }
+
+  if (sheetLog && sheetLog.getLastRow() >= 2) {
+
+    var dadosLogMes = sheetLog
+      .getRange(2, 1, sheetLog.getLastRow() - 1, 4)
+      .getDisplayValues();
+
+    dadosLogMes.forEach(function(row) {
+
+      var dataLog = String(row[0] || '').trim();
+      var partes = dataLog.split('/');
+
+      if (partes.length !== 3) return;
+
+      var diaLog = Number(partes[0]);
+      var mesLog = String(partes[1] || '');
+      var anoLog = String(partes[2] || '');
+
+      if (mesLog !== mesAtual || anoLog !== anoAtual) return;
+      if (!diaLog || diaLog < 1 || diaLog > diaAtual) return;
+
+      volumePorDia[diaLog] = (volumePorDia[diaLog] || 0) + 1;
+    });
+  }
+
+  var volumeAcessosMes = [];
+
+  for (var diaMes = 1; diaMes <= diaAtual; diaMes++) {
+    volumeAcessosMes.push({
+      dia: diaMes,
+      valor: volumePorDia[diaMes] || 0
+    });
+  }
+
+  return {
+    data: Utilities.formatDate(agora, timezone, 'dd/MM/yyyy'),
+    totalAutorizados: totalAutorizados,
+    acessaramHoje: Object.keys(emailsQueAcessaramHoje).length,
+    naoAcessaramHoje: naoAcessaramHoje.length,
+    ultimoAcesso: ultimoAcesso,
+    acessosHoje: acessosHoje,
+    listaNaoAcessaramHoje: naoAcessaramHoje,
+    volumeAcessosMes: volumeAcessosMes
+  };
+}
+
