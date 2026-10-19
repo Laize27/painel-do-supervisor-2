@@ -714,11 +714,18 @@
 
       .collaborator-main-info { 
         display: grid; 
-        grid-template-columns: 130px minmax(0, 1fr) 220px 220px; 
+        /* Foto + dados + os três cards de resumo, sem sobreposição. */
+        grid-template-columns: 100px minmax(280px, 1fr) repeat(3, minmax(140px, 170px)); 
         align-items: start; 
-        column-gap: 18px; 
+        column-gap: 12px; 
+        row-gap: 12px;
         width: 100%; 
       }
+      .collaborator-avatar { width: 88px !important; height: 88px !important; object-fit: cover; }
+      .collaborator-details { min-width: 0; }
+      .collaborator-meta-grid { min-width: 0; }
+      .check-summary-card { min-width: 0; width: 100%; box-sizing: border-box; }
+      .quartil-raiox-visible-history, .quartil-producao-history, #historicoRaioXColaborador, #historicoQuartilProducao { display: none !important; }
 
       .colab-emphasis-card {
         min-height: 92px;
@@ -1047,10 +1054,13 @@
         color: var(--text-muted);
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         gap: 6px;
         margin-right: 4px;
+        white-space: nowrap;
+        flex: 0 0 auto;
+        min-width: max-content;
       }
 
       .city-chip {
@@ -4952,9 +4962,7 @@ sem os tons escuros atuais.
          Os elementos permanecem no DOM para não quebrar funções existentes. */
       #historicoRaioXColaborador,
       #quartilProducaoCollapsed,
-      #quartilProducaoContent,
-      #badgeRankingContainer,
-      #badgeCertificacaoContainer {
+      #quartilProducaoContent {
         display: none !important;
       }
       .collaborator-main-info {
@@ -5179,6 +5187,171 @@ sem os tons escuros atuais.
   }
 </style>
 
+
+<style id="resumo-checks-supervisor">
+  .collaborator-main-info {
+    display: grid !important;
+    grid-template-columns: 96px minmax(300px, 1fr) repeat(3, minmax(145px, 176px)) !important;
+    align-items: center !important;
+    column-gap: 10px !important;
+  }
+  .check-summary-card {
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 11px;
+    border: 1px solid;
+    border-radius: 9px;
+    box-shadow: 0 2px 5px rgba(15, 23, 42, .04);
+    overflow: hidden;
+  }
+  .check-summary-analysis { background:#fff0e9; border-color:#ffc4ad; color:#b83b10; }
+  .check-summary-approval { background:#fff4d6; border-color:#ffd778; color:#956300; }
+  .check-summary-total { background:#e8f2ff; border-color:#b8d2ff; color:#1d4f91; }
+  .check-summary-icon { flex:0 0 30px; width:30px; height:30px; border-radius:8px; background:rgba(255,255,255,.8); display:flex; align-items:center; justify-content:center; font-size:16px; }
+  .check-summary-content { min-width:0; flex:1; }
+  .check-summary-label { font-size:9px; font-weight:800; line-height:1.25; letter-spacing:.2px; text-transform:uppercase; }
+  .check-summary-value { font-size:24px; font-weight:800; line-height:1.12; margin-top:4px; font-variant-numeric:tabular-nums; }
+  .check-summary-caption { font-size:9px; line-height:1.25; margin-top:2px; opacity:.8; }
+  body.dark-mode .check-summary-analysis { background:#3a2924; border-color:#754333; color:#ffb99e; }
+  body.dark-mode .check-summary-approval { background:#393224; border-color:#80652a; color:#ffdc8a; }
+  body.dark-mode .check-summary-total { background:#222f43; border-color:#3d5e8b; color:#a9ccff; }
+  @media (max-width: 1450px) {
+    .collaborator-main-info { grid-template-columns: 90px minmax(220px,1fr) repeat(3,minmax(112px,140px)) !important; column-gap:8px !important; }
+    .check-summary-card { padding:7px; gap:6px; }
+    .check-summary-icon { flex-basis:25px; width:25px; height:25px; }
+    .check-summary-value { font-size:21px; }
+  }
+  @media (max-width: 1050px) {
+    .collaborator-main-info { grid-template-columns: 82px minmax(0,1fr) !important; }
+    .check-summary-card { grid-column: 1 / -1; }
+    .collaborator-avatar { width:76px !important; height:76px !important; }
+  }
+  body.tv-mode .collaborator-main-info { grid-template-columns: 96px minmax(260px,1fr) repeat(3,minmax(125px,155px)) !important; }
+</style>
+
+
+<style id="ajuste-layout-resumo-checks-v61">
+  /* Remove as frases auxiliares abaixo dos números dos três cards. */
+  .check-summary-caption { display: none !important; }
+
+  /* Foto e dados do colaborador ficam em colunas próprias, sem sobreposição. */
+  .collaborator-main-info {
+    display: grid !important;
+    grid-template-columns: 108px minmax(320px, 1fr) repeat(3, minmax(190px, 200px)) !important;
+    align-items: start !important;
+    column-gap: 12px !important;
+    row-gap: 12px !important;
+  }
+  .collaborator-avatar {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    width: 100px !important;
+    height: 100px !important;
+    min-width: 100px !important;
+    max-width: 100px !important;
+    object-fit: cover !important;
+    align-self: start !important;
+    margin: 0 !important;
+    position: relative !important;
+    inset: auto !important;
+    z-index: 1 !important;
+  }
+  .collaborator-details {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 2px 0 0 0 !important;
+    position: relative !important;
+    inset: auto !important;
+    z-index: 2 !important;
+  }
+  .collaborator-details .collaborator-name {
+    margin: 6px 0 8px !important;
+    line-height: 1.2 !important;
+    overflow-wrap: anywhere !important;
+  }
+  .collaborator-meta-grid {
+    min-width: 0 !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 8px 16px !important;
+  }
+  .collaborator-meta-grid .meta-item {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+  .check-summary-card {
+    min-width: 195px !important;
+    width: 195px !important;
+    flex: 0 0 195px !important;
+    box-sizing: border-box !important;
+    align-self: start !important;
+    min-height: 64px !important;
+    padding: 9px 10px !important;
+  }
+  .check-summary-label {
+    white-space: nowrap !important;
+    overflow-wrap: normal !important;
+    word-break: keep-all !important;
+    font-size: 8px !important;
+    line-height: 1.15 !important;
+  }
+  .check-summary-content { min-width: 0 !important; overflow: visible !important; overflow-wrap: normal !important; }
+  .check-summary-value { margin-top: 4px !important; }
+  @media (max-width: 1450px) {
+    .collaborator-main-info { grid-template-columns: 96px minmax(220px, 1fr) repeat(3, minmax(190px, 195px)) !important; column-gap: 9px !important; }
+    .collaborator-avatar { width: 88px !important; height: 88px !important; min-width: 88px !important; max-width: 88px !important; }
+    .check-summary-card { width: 195px !important; min-width: 195px !important; flex-basis: 195px !important; padding: 7px 9px !important; gap: 7px !important; }
+  }
+  @media (max-width: 1100px) {
+    .collaborator-main-info { grid-template-columns: 88px minmax(0, 1fr) !important; }
+    .collaborator-avatar { grid-column: 1 !important; grid-row: 1 !important; width: 80px !important; height: 80px !important; min-width: 80px !important; max-width: 80px !important; }
+    .collaborator-details { grid-column: 2 !important; grid-row: 1 !important; }
+    .check-summary-card { grid-column: 1 / -1 !important; width: 100% !important; min-width: 0 !important; flex: 1 1 100% !important; }
+  }
+</style>
+
+
+<style id="ajuste-final-titulos-cards-v66">
+  /* Dá espaço extra somente ao card de aprovação, sem alterar os outros dois. */
+  .collaborator-main-info {
+    grid-template-columns: 108px minmax(260px, 1fr) 200px 218px 200px !important;
+    column-gap: 10px !important;
+  }
+  .check-summary-card {
+    width: 200px !important; min-width: 200px !important; flex: 0 0 200px !important;
+    padding: 8px 10px !important; gap: 8px !important;
+  }
+  #summaryChecksApprovalCard {
+    width: 218px !important; min-width: 218px !important; flex-basis: 218px !important;
+    padding-right: 9px !important;
+  }
+  .check-summary-label {
+    white-space: nowrap !important; overflow-wrap: normal !important;
+    word-break: keep-all !important; font-size: 8px !important; line-height: 1.15 !important;
+  }
+  .check-summary-content { min-width: 0 !important; overflow: visible !important; }
+  @media (max-width: 1450px) {
+    .collaborator-main-info { grid-template-columns: 96px minmax(190px, 1fr) 195px 213px 195px !important; column-gap: 8px !important; }
+    .check-summary-card { width: 195px !important; min-width: 195px !important; flex-basis: 195px !important; padding: 7px 8px !important; gap: 7px !important; }
+    #summaryChecksApprovalCard { width: 213px !important; min-width: 213px !important; flex-basis: 213px !important; }
+  }
+  @media (max-width: 1100px) {
+    .collaborator-main-info { grid-template-columns: 88px minmax(0, 1fr) !important; }
+    .check-summary-card, #summaryChecksApprovalCard { grid-column: 1 / -1 !important; width: 100% !important; min-width: 0 !important; flex: 1 1 100% !important; }
+    .check-summary-label { white-space: nowrap !important; }
+  }
+</style>
+
 </head>
   <body>
 
@@ -5290,20 +5463,32 @@ sem os tons escuros atuais.
               <div class="meta-item"><i class="fa-solid fa-sitemap"></i> Setor: <strong id="colabSetor">-</strong></div>
             </div></div>
 
-          <div class="colab-emphasis-card ranking-emphasis-card" id="badgeRankingContainer">
-            <div class="emphasis-card-icon"><i class="fa-solid fa-ranking-star"></i></div>
-            <div class="emphasis-card-label">RANKING NORDESTE</div>
-            <div class="emphasis-card-value" id="colabRanking">-</div>
+          <div class="check-summary-card check-summary-analysis" id="summaryChecksAnalysisCard">
+            <div class="check-summary-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+            <div class="check-summary-content">
+              <div class="check-summary-label">CHECKS PENDENTES DE ANÁLISE</div>
+              <div class="check-summary-value" id="summaryChecksAnalysis">0</div>
+              
+            </div>
+          </div>
+          <div class="check-summary-card check-summary-approval" id="summaryChecksApprovalCard">
+            <div class="check-summary-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="check-summary-content">
+              <div class="check-summary-label">CHECKS PENDENTES DE APROVAÇÃO</div>
+              <div class="check-summary-value" id="summaryChecksApproval">0</div>
+              
+            </div>
+          </div>
+          <div class="check-summary-card check-summary-total" id="summaryChecksTotalCard">
+            <div class="check-summary-icon"><i class="fa-solid fa-list-check"></i></div>
+            <div class="check-summary-content">
+              <div class="check-summary-label">TOTAL DE CHECKS</div>
+              <div class="check-summary-value" id="summaryChecksTotal">0</div>
+              
+            </div>
           </div>
 
-          <div class="colab-emphasis-card cert-emphasis-card badge-neutral" id="badgeCertificacaoContainer">
-            <div class="emphasis-card-icon"><i class="fa-solid fa-award"></i></div>
-            <div class="emphasis-card-label">CERTIFICAÇÃO</div>
-            <div class="emphasis-card-value" id="colabCertificacao">-</div>
-          </div>
-        </div>
-
-        <!-- HISTÓRICO RAIO X — PRIMEIRO E SEMPRE VISÍVEL -->
+          <!-- HISTÓRICO RAIO X — PRIMEIRO E SEMPRE VISÍVEL -->
         <div class="quartil-raiox-visible-history" id="historicoRaioXColaborador">
           <div class="quartil-producao-history-title quartil-raiox-history-title">
             <i class="fa-solid fa-chart-line"></i> Histórico de Quartil Raio X — Últimos 12 Meses
@@ -9643,6 +9828,7 @@ sem os tons escuros atuais.
               atualizarCheckGpsPontoCard();
               atualizarCheckConectorInstalacaoCard();
               atualizarCheckDropIatCard();
+              atualizarResumoChecksSupervisor();
               
               if (document.body.classList.contains('tv-mode')) sincronizarApresentacaoTvComFiltros();
             } catch(e) { console.error(e); }
@@ -9889,21 +10075,30 @@ sem os tons escuros atuais.
           });
         }
 
-        setDropdownOptions('filterNome', getUniqueValues(filtrarPor('NOME'), 'NOME', false));
+        // O filtro principal de colaborador/supervisor não deve ser apagado pela cascata.
+        // Se a lista de nomes for reduzida por mês/setor/quartil, o TomSelect pode limpar
+        // a seleção atual; o perfil continua mostrando o colaborador antigo, enquanto KPIs
+        // e checks passam a usar o contexto geral. Mantemos todos os nomes disponíveis.
+        setDropdownOptions('filterNome', getUniqueValues(allData, 'NOME', false));
         setDropdownOptions('filterCoordenador', getUniqueValues(filtrarPor('COORDENADOR DE CAMPO'), 'COORDENADOR DE CAMPO', false));
         setDropdownOptions('filterGerente', getUniqueValues(filtrarPor('GERENTE DE CAMPO'), 'GERENTE DE CAMPO', false));
         setDropdownOptions('filterSetor', getUniqueValues(filtrarPor('SETOR'), 'SETOR', false));
         setDropdownOptions('filterQuartil', getUniqueValues(filtrarPor('QUARTIL RAIO X'), 'QUARTIL RAIO X', false));
 
+        // Recalcula tudo usando o filtro que ficou efetivamente selecionado após atualizar as opções.
         var currentFiltered = getFilteredData(false);
         var nomeSelecionado = selects['filterNome'] ? selects['filterNome'].getValue() : [];
-        if (!nomeSelecionado || (Array.isArray(nomeSelecionado) ? nomeSelecionado.length === 0 : !nomeSelecionado)) {
-          updateKpisForCurrentContext(currentFiltered, null);
+        var nomeAtual = Array.isArray(nomeSelecionado) ? (nomeSelecionado[0] || '') : (nomeSelecionado || '');
+        if (nomeAtual) {
+          updateCollaboratorCard(nomeAtual);
+          // Garantia explícita: os KPIs recebem o conjunto filtrado, não o contexto global.
+          currentFiltered = getFilteredData(false);
+          updateKpisForCurrentContext(currentFiltered, nomeAtual);
         } else {
-          updateCollaboratorCard(Array.isArray(nomeSelecionado) ? nomeSelecionado[0] : nomeSelecionado);
+          updateKpisForCurrentContext(currentFiltered, null);
         }
 
-        // O ranking também acompanha o mês selecionado no filtro principal.
+        // Atualiza todos os checks após o filtro principal e os filtros em cascata.
         renderRankingsExecutivos();
         atualizarCheckPpcCard();
         atualizarCheckKmlCard();
@@ -9914,6 +10109,7 @@ sem os tons escuros atuais.
         atualizarCheckGpsPontoCard();
         atualizarCheckConectorInstalacaoCard();
         atualizarCheckDropIatCard();
+        atualizarResumoChecksSupervisor();
       }
 
       function updateKpisForCurrentContext(filteredData, selectedNomeStr) {
@@ -10757,13 +10953,20 @@ sem os tons escuros atuais.
           }
         }
 
-        document.getElementById('colabNomeAbreviado').textContent = dataAtual['NOME'] || 'N/A';
-        document.getElementById('colabMatricula').textContent = dataAtual['CÓDIGO'] || '-';
-        document.getElementById('colabCidade').textContent = dataAtual['CIDADE FILIAL'] || '-';
-        document.getElementById('colabTempoEmpresa').textContent = dataAtual['TEMPO EMPRESA'] || dataAtual['TEMPO DE CASA'] || '-';
-        document.getElementById('colabTempoEquipe').textContent = getValueSafe(dataAtual, ['TEMPO COM A EQUIPE']) || '-';
-        document.getElementById('colabEquipes').textContent = dataAtual['EQUIPES'] || '0';
-        document.getElementById('colabSetor').textContent = getValueSafe(dataAtual, ['SETOR']) || '-';
+        var elNomeColab = document.getElementById('colabNomeAbreviado');
+        if (elNomeColab) elNomeColab.textContent = dataAtual['NOME'] || 'N/A';
+        var elMatriculaColab = document.getElementById('colabMatricula');
+        if (elMatriculaColab) elMatriculaColab.textContent = dataAtual['CÓDIGO'] || '-';
+        var elCidadeColab = document.getElementById('colabCidade');
+        if (elCidadeColab) elCidadeColab.textContent = dataAtual['CIDADE FILIAL'] || '-';
+        var elTempoEmpresaColab = document.getElementById('colabTempoEmpresa');
+        if (elTempoEmpresaColab) elTempoEmpresaColab.textContent = dataAtual['TEMPO EMPRESA'] || dataAtual['TEMPO DE CASA'] || '-';
+        var elTempoEquipeColab = document.getElementById('colabTempoEquipe');
+        if (elTempoEquipeColab) elTempoEquipeColab.textContent = getValueSafe(dataAtual, ['TEMPO COM A EQUIPE']) || '-';
+        var elEquipesColab = document.getElementById('colabEquipes');
+        if (elEquipesColab) elEquipesColab.textContent = dataAtual['EQUIPES'] || '0';
+        var elSetorColab = document.getElementById('colabSetor');
+        if (elSetorColab) elSetorColab.textContent = getValueSafe(dataAtual, ['SETOR']) || '-';
 
         var valRankingRaw = getValueSafe(dataAtual, ['POSIÇÃO 2', 'POSICAO 2']) || dataAtual['POSIÇÃO 2'] || dataAtual['POSICAO 2'];
         var rankingEl = document.getElementById('colabRanking');
@@ -10807,7 +11010,8 @@ sem os tons escuros atuais.
 
         var valCertificacaoRaw = getValueSafe(dataAtual, ['CERTIFICAÇÃO', 'CERTIFICACAO']);
         var certFormatted = formatarCertificacao(valCertificacaoRaw);
-        document.getElementById('colabCertificacao').textContent = certFormatted;
+        var elCertificacaoColab = document.getElementById('colabCertificacao');
+        if (elCertificacaoColab) elCertificacaoColab.textContent = certFormatted;
 
         var certBox = document.getElementById('badgeCertificacaoContainer');
         if (certBox) {
@@ -10978,15 +11182,24 @@ sem os tons escuros atuais.
           imgEl.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><rect width='100%' height='100%' fill='%23f4511e'/><text x='50%' y='50%' fill='%23ffffff' font-size='16' text-anchor='middle' dy='.3em'>FOTO</text></svg>";
         }
 
-        document.getElementById('colabNomeAbreviado').textContent = 'Selecione um Colaborador';
-        document.getElementById('colabMatricula').textContent = '-';
-        document.getElementById('colabCidade').textContent = '-';
-        document.getElementById('colabTempoEmpresa').textContent = '-';
-        document.getElementById('colabEquipes').textContent = '-';
-        document.getElementById('colabSetor').textContent = '-';
-        document.getElementById('colabRanking').textContent = '-';
-        document.getElementById('colabCertificacao').textContent = '-';
-        document.getElementById('colabCidadesList').innerHTML = '<span class="city-chip">-</span>';
+        var elNomeColab = document.getElementById('colabNomeAbreviado');
+        if (elNomeColab) elNomeColab.textContent = 'Selecione um Colaborador';
+        var elMatriculaColab = document.getElementById('colabMatricula');
+        if (elMatriculaColab) elMatriculaColab.textContent = '-';
+        var elCidadeColab = document.getElementById('colabCidade');
+        if (elCidadeColab) elCidadeColab.textContent = '-';
+        var elTempoEmpresaColab = document.getElementById('colabTempoEmpresa');
+        if (elTempoEmpresaColab) elTempoEmpresaColab.textContent = '-';
+        var elEquipesColab = document.getElementById('colabEquipes');
+        if (elEquipesColab) elEquipesColab.textContent = '-';
+        var elSetorColab = document.getElementById('colabSetor');
+        if (elSetorColab) elSetorColab.textContent = '-';
+        var elRankingColab = document.getElementById('colabRanking');
+        if (elRankingColab) elRankingColab.textContent = '-';
+        var elCertificacaoColab = document.getElementById('colabCertificacao');
+        if (elCertificacaoColab) elCertificacaoColab.textContent = '-';
+        var elCidadesColab = document.getElementById('colabCidadesList');
+        if (elCidadesColab) elCidadesColab.innerHTML = '<span class="city-chip">-</span>';
         renderHistoricoQuartilProducao(null);
         renderHistoricoQuartilRaioX(null);
         
@@ -11133,7 +11346,8 @@ sem os tons escuros atuais.
         if (label) label.textContent = dados.length === 1 ? '1 registro pendente' : dados.length + ' registros pendentes';
         if (link) link.textContent = dados.length ? 'Clique para consultar os registros →' : 'Nenhum registro atende à regra →';
       }
-      function abrirModalCheckDropIat() { atualizarCheckDropIatCard(); var modal = document.getElementById('modalCheckDropIat'); if (!modal) return; renderizarCheckDropIat(); modal.style.display = 'flex'; }
+      function abrirModalCheckDropIat() { atualizarCheckDropIatCard();
+              atualizarResumoChecksSupervisor(); var modal = document.getElementById('modalCheckDropIat'); if (!modal) return; renderizarCheckDropIat(); modal.style.display = 'flex'; }
       function fecharModalCheckDropIat(event) { if (event && event.target && event.currentTarget && event.target !== event.currentTarget) return; var modal = document.getElementById('modalCheckDropIat'); if (modal) modal.style.display = 'none'; }
       function renderizarCheckDropIat() {
         var tbody = document.getElementById('checkDropIatTableBody'), total = document.getElementById('checkDropIatModalTotal'); if (!tbody) return;
@@ -11253,6 +11467,25 @@ sem os tons escuros atuais.
             String(getValueSafe(b, ['FUNCIONÁRIO', 'FUNCIONARIO', 'COLABORADOR']) || ''), 'pt-BR', { sensitivity: 'base' }
           );
         });
+      }
+
+      function atualizarResumoChecksSupervisor() {
+        // Soma os contadores que já são calculados pelas regras individuais, após os filtros ativos.
+        var ids = ['checkPpcTotal','checkAbsClienteTotal','checkKmlTotal','checkTratarPontoTotal','checkBhHePtTotal','checkGpsPontoTotal','checkConectorInstalacaoTotal','checkDropIatTotal'];
+        var total = 0;
+        ids.forEach(function(id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          var n = parseInt(String(el.textContent || '0').replace(/[^0-9-]/g, ''), 10);
+          if (Number.isFinite(n) && n > 0) total += n;
+        });
+        var analysis = document.getElementById('summaryChecksAnalysis');
+        var approval = document.getElementById('summaryChecksApproval');
+        var all = document.getElementById('summaryChecksTotal');
+        if (analysis) analysis.textContent = String(total);
+        // O painel ainda não persiste o encaminhamento/aprovação no Sheets; não inventar aprovações.
+        if (approval) approval.textContent = '0';
+        if (all) all.textContent = String(total);
       }
 
       function atualizarCheckPpcCard() {
