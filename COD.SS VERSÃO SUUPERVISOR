@@ -50,51 +50,94 @@
 
  */
 
-
-
 function doGet(e) {
 
   try {
 
     var pagina = e && e.parameter
+
       ? String(e.parameter.page || '').trim().toLowerCase()
+
       : '';
 
-    // Monitoramento: somente Laíze pode acessar.
-    if (pagina === 'monitoramento') {
-      validarAdminMonitoramento_();
+    // Check: página independente, mantendo a validação de acesso existente.
 
-      return HtmlService.createHtmlOutputFromFile('Monitoramento')
-        .setTitle('Monitoramento de Acessos')
+    if (pagina === 'check') {
+
+      var emailCheck = validarAcesso_();
+
+      registrarAcesso_(emailCheck);
+
+      return HtmlService.createHtmlOutputFromFile('Check')
+
+        .setTitle('Check - Painel do Supervisor')
+
+        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+
+        .addMetaTag('viewport', 'width=device-width, initial-scale=1');
+
+    }
+
+    // Check do Coordenador: usa a mesma validação de acesso do painel atual.
+    // O arquivo HTML precisa estar salvo no projeto com o nome Coordenador.
+    if (pagina === 'coordenador') {
+      var emailCoordenador = validarAcesso_();
+      registrarAcesso_(emailCoordenador);
+      return HtmlService.createHtmlOutputFromFile('Coordenador')
+        .setTitle('Check do Coordenador')
         .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
         .addMetaTag('viewport', 'width=device-width, initial-scale=1');
     }
 
+    // Monitoramento: somente Laíze pode acessar.
+
+    if (pagina === 'monitoramento') {
+
+      validarAdminMonitoramento_();
+
+      return HtmlService.createHtmlOutputFromFile('Monitoramento')
+
+        .setTitle('Monitoramento de Acessos')
+
+        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+
+        .addMetaTag('viewport', 'width=device-width, initial-scale=1');
+
+    }
+
     // Painel principal
+
     var email = validarAcesso_();
 
     // Registra o acesso somente depois da validação.
+
     registrarAcesso_(email);
 
     return HtmlService.createHtmlOutputFromFile('Index')
+
       .setTitle('Painel do Supervisor - Dashboard')
+
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+
       .addMetaTag('viewport', 'width=device-width, initial-scale=1');
 
   } catch (erro) {
 
     return HtmlService.createHtmlOutput(
+
       criarPaginaAcessoNegado_(erro.message)
+
     )
+
       .setTitle('Acesso Restrito - Painel do Supervisor')
+
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+
       .addMetaTag('viewport', 'width=device-width, initial-scale=1');
 
   }
 
 }
-
-
 
 /**
 
@@ -112,15 +155,11 @@ function doGet(e) {
 
 function validarAcesso_() {
 
-
-
   var email = String(Session.getActiveUser().getEmail() || '')
 
     .trim()
 
     .toLowerCase();
-
-
 
   if (!email) {
 
@@ -128,13 +167,9 @@ function validarAcesso_() {
 
   }
 
-
-
   var ss = SpreadsheetApp.getActiveSpreadsheet();
 
   var sheetAcessos = ss.getSheetByName('ACESSOS');
-
-
 
   if (!sheetAcessos) {
 
@@ -142,11 +177,7 @@ function validarAcesso_() {
 
   }
 
-
-
   var lastRow = sheetAcessos.getLastRow();
-
-
 
   if (lastRow < 2) {
 
@@ -154,19 +185,13 @@ function validarAcesso_() {
 
   }
 
-
-
   var emails = sheetAcessos
 
     .getRange(2, 1, lastRow - 1, 1)
 
     .getDisplayValues();
 
-
-
   for (var i = 0; i < emails.length; i++) {
-
-
 
     var emailAutorizado = String(emails[i][0] || '')
 
@@ -174,29 +199,17 @@ function validarAcesso_() {
 
       .toLowerCase();
 
-
-
     if (emailAutorizado && emailAutorizado === email) {
 
       return email;
 
     }
 
-
-
   }
-
-
 
   throw new Error('Seu e-mail não está autorizado para acessar este painel.');
 
-
-
 }
-
-
-
-
 
 /**
 
@@ -206,11 +219,7 @@ function validarAcesso_() {
 
 function criarPaginaAcessoNegado_(mensagem) {
 
-
-
   var detalhe = String(mensagem || 'Acesso não autorizado.');
-
-
 
   return '<!DOCTYPE html>' +
 
@@ -262,17 +271,9 @@ function criarPaginaAcessoNegado_(mensagem) {
 
     '</div></body></html>';
 
-
-
 }
 
-
-
-
-
 function escapeHtml_(texto) {
-
-
 
   return String(texto || '')
 
@@ -286,13 +287,7 @@ function escapeHtml_(texto) {
 
     .replace(/'/g, '&#39;');
 
-
-
 }
-
-
-
-
 
 /**
 
@@ -302,15 +297,9 @@ function escapeHtml_(texto) {
 
 function getDashboardData() {
 
-
-
   validarAcesso_();
 
-
-
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-
-
 
   var sheetRaioX                = ss.getSheetByName("RAIO X");
 
@@ -321,6 +310,8 @@ function getDashboardData() {
   var sheetAbst                 = ss.getSheetByName("TAM ABST/CLIENTE");
 
   var sheetKml                  = ss.getSheetByName("TAM KM/L");
+  // Nova base do Check - Litragem Repetida.
+  var sheetAnaliticoKml         = ss.getSheetByName("ANALITICO KM/L");
 
   var sheetAcidentes            = ss.getSheetByName("ACIDENTES");
 
@@ -332,11 +323,19 @@ function getDashboardData() {
 
   var sheetGpsPonto             = ss.getSheetByName("GPS PONTO");
 
+  // Base analítica usada pelo Check GPS + Ponto (deslocamentos sem última batida).
+  var sheetAnaliticoGpsPonto    = ss.getSheetByName("ANALITICO GPS PONTO");
+
   var sheetRecorrencia          = ss.getSheetByName("RECORRÊNCIA") ||
 
                                   ss.getSheetByName("RECORRENCIA");
 
   var sheetMaterial              = ss.getSheetByName("MATERIAL");
+
+  var sheetAnaliticoMaterial     = ss.getSheetByName("ANALITICO MATERIAL");
+
+  // Base do Check - Veículos parados há mais de 30 dias.
+  var sheetVeiculosParados       = ss.getSheetByName("VEICULOS PARADOS");
 
   var sheetIndicadoresCidades    = ss.getSheetByName("INDICADORES CIDADES");
 
@@ -348,17 +347,11 @@ function getDashboardData() {
 
   var sheetInstaladosEfetivados  = ss.getSheetByName("INSTALADOS X EFETIVADOS");
 
-
-
-
-
   var raioxData = sheetRaioX
 
     ? getSheetData(sheetRaioX)
 
     : [];
-
-
 
   /*
 
@@ -376,17 +369,11 @@ function getDashboardData() {
 
     : [];
 
-
-
-
-
   var pccData = sheetPcc
 
     ? getSheetData(sheetPcc)
 
     : [];
-
-
 
   var tamData = sheetTam
 
@@ -394,15 +381,11 @@ function getDashboardData() {
 
     : [];
 
-
-
   var abstData = sheetAbst
 
     ? getSheetData(sheetAbst)
 
     : [];
-
-
 
   var kmlData = sheetKml
 
@@ -410,7 +393,10 @@ function getDashboardData() {
 
     : [];
 
-
+  // Envia os registros brutos para o HTML aplicar a regra de litragem exata.
+  var analiticoKmlData = sheetAnaliticoKml
+    ? getSheetData(sheetAnaliticoKml)
+    : [];
 
   var acidentesData = sheetAcidentes
 
@@ -418,15 +404,11 @@ function getDashboardData() {
 
     : [];
 
-
-
   var inspecaoData = sheetInspecao
 
     ? getSheetData(sheetInspecao)
 
     : [];
-
-
 
   var tratarPtData = sheetTratarPt
 
@@ -434,15 +416,11 @@ function getDashboardData() {
 
     : [];
 
-
-
   var bhHeData = sheetBhHe
 
     ? getSheetData(sheetBhHe)
 
     : [];
-
-
 
   var gpsPontoData = sheetGpsPonto
 
@@ -450,7 +428,11 @@ function getDashboardData() {
 
     : [];
 
+  var analiticoGpsPontoData = sheetAnaliticoGpsPonto
 
+    ? getSheetData(sheetAnaliticoGpsPonto)
+
+    : [];
 
   var recorrenciaData = sheetRecorrencia
 
@@ -458,15 +440,23 @@ function getDashboardData() {
 
     : [];
 
-
-
   var materialData = sheetMaterial
 
     ? getSheetData(sheetMaterial)
 
     : [];
 
+  var analiticoMaterialData = sheetAnaliticoMaterial
 
+    ? getSheetData(sheetAnaliticoMaterial)
+
+    : [];
+
+  var veiculosParadosData = sheetVeiculosParados
+
+    ? getSheetData(sheetVeiculosParados)
+
+    : [];
 
   var indicadoresCidadesData = sheetIndicadoresCidades
 
@@ -474,15 +464,11 @@ function getDashboardData() {
 
     : [];
 
-
-
   var quartil4Data = sheetQuartil4
 
     ? getSheetData(sheetQuartil4)
 
     : [];
-
-
 
   var improdutivaData = sheetImprodutiva
 
@@ -490,17 +476,11 @@ function getDashboardData() {
 
     : [];
 
-
-
   var instaladosEfetivadosData = sheetInstaladosEfetivados
 
     ? getSheetData(sheetInstaladosEfetivados)
 
     : [];
-
-
-
-
 
   var rankingData = sheetRanking
 
@@ -524,17 +504,9 @@ function getDashboardData() {
 
       };
 
-
-
-
-
   return JSON.stringify({
 
-
-
     raiox: raioxData,
-
-
 
     /*
 
@@ -546,81 +518,48 @@ function getDashboardData() {
 
     fotosRaioX: fotosRaioXData,
 
-
-
     pcc: pccData,
-
-
 
     tam: tamData,
 
-
-
     abst: abstData,
 
-
-
     kml: kmlData,
-
-
+      analiticoKml: analiticoKmlData,
 
     acidentes: acidentesData,
 
-
-
     inspecao: inspecaoData,
-
-
 
     tratarPonto: tratarPtData,
 
-
-
     bhHe: bhHeData,
-
-
 
     gpsPonto: gpsPontoData,
 
-
+    analiticoGpsPonto: analiticoGpsPontoData,
 
     recorrencia: recorrenciaData,
 
-
-
     material: materialData,
 
+    analiticoMaterial: analiticoMaterialData,
 
+    veiculosParados: veiculosParadosData,
 
     indicadoresCidades: indicadoresCidadesData,
 
-
-
     quartil4: quartil4Data,
-
-
 
     improdutiva: improdutivaData,
 
-
-
     instaladosEfetivados: instaladosEfetivadosData,
-
-
 
     ranking: rankingData
 
-
-
   });
 
-
-
 }
-
-
-
-
 
 /**
 
@@ -666,11 +605,7 @@ function getDashboardData() {
 
 function getRankingData(sheet) {
 
-
-
   var lastRow = sheet.getLastRow();
-
-
 
   var lastCol = Math.max(
 
@@ -680,13 +615,7 @@ function getRankingData(sheet) {
 
   );
 
-
-
-
-
   if (lastRow < 3) {
-
-
 
     return {
 
@@ -706,13 +635,7 @@ function getRankingData(sheet) {
 
     };
 
-
-
   }
-
-
-
-
 
   var values = sheet
 
@@ -720,13 +643,7 @@ function getRankingData(sheet) {
 
     .getDisplayValues();
 
-
-
-
-
   function normalizarCabecalho(v) {
-
-
 
     return String(v || '')
 
@@ -738,21 +655,11 @@ function getRankingData(sheet) {
 
       .toUpperCase();
 
-
-
   }
-
-
-
-
 
   function numeroDaPosicao(valor) {
 
-
-
     var m = String(valor || '').match(/\d+/);
-
-
 
     return m
 
@@ -760,37 +667,17 @@ function getRankingData(sheet) {
 
       : 999999;
 
-
-
   }
-
-
-
-
 
   function normalizarMes(valor) {
 
-
-
     return String(valor || '').trim();
-
-
 
   }
 
-
-
-
-
   var headerRow = 1;
 
-
-
   var dataStart = 2;
-
-
-
-
 
   for (
 
@@ -802,25 +689,17 @@ function getRankingData(sheet) {
 
   ) {
 
-
-
     var a = normalizarCabecalho(values[r][0]);
 
     var b = normalizarCabecalho(values[r][1]);
 
     var c = normalizarCabecalho(values[r][2]);
 
-
-
     var i = normalizarCabecalho(values[r][8]);
 
     var j = normalizarCabecalho(values[r][9]);
 
     var k = normalizarCabecalho(values[r][10]);
-
-
-
-
 
     if (
 
@@ -848,29 +727,15 @@ function getRankingData(sheet) {
 
     ) {
 
-
-
       headerRow = r;
-
-
 
       dataStart = r + 1;
 
-
-
       break;
-
-
 
     }
 
-
-
   }
-
-
-
-
 
   function montarLista(
 
@@ -888,13 +753,7 @@ function getRankingData(sheet) {
 
   ) {
 
-
-
     var lista = [];
-
-
-
-
 
     for (
 
@@ -906,11 +765,7 @@ function getRankingData(sheet) {
 
     ) {
 
-
-
       var row = values[r];
-
-
 
       var nome = String(
 
@@ -918,15 +773,11 @@ function getRankingData(sheet) {
 
       ).trim();
 
-
-
       var certificacao = String(
 
         row[colCert] || ''
 
       ).trim();
-
-
 
       var posicao = String(
 
@@ -934,17 +785,11 @@ function getRankingData(sheet) {
 
       ).trim();
 
-
-
       var mes = normalizarMes(
 
         row[colMes]
 
       );
-
-
-
-
 
       if (
 
@@ -956,33 +801,17 @@ function getRankingData(sheet) {
 
       ) {
 
-
-
         continue;
-
-
 
       }
 
-
-
-
-
       lista.push({
-
-
 
         nome: nome,
 
-
-
         certificacao: certificacao,
 
-
-
         posicao: posicao,
-
-
 
         coordenador: String(
 
@@ -990,33 +819,19 @@ function getRankingData(sheet) {
 
         ).trim(),
 
-
-
         gerente: String(
 
           row[colGerente] || ''
 
         ).trim(),
 
-
-
         mes: mes
-
-
 
       });
 
-
-
     }
 
-
-
-
-
     lista.sort(function(a, b) {
-
-
 
       var pa = numeroDaPosicao(
 
@@ -1024,31 +839,17 @@ function getRankingData(sheet) {
 
       );
 
-
-
       var pb = numeroDaPosicao(
 
         b.posicao
 
       );
 
-
-
-
-
       if (pa !== pb) {
-
-
 
         return pa - pb;
 
-
-
       }
-
-
-
-
 
       return a.nome.localeCompare(
 
@@ -1058,23 +859,11 @@ function getRankingData(sheet) {
 
       );
 
-
-
     });
-
-
-
-
 
     return lista;
 
-
-
   }
-
-
-
-
 
   /*
 
@@ -1100,10 +889,6 @@ function getRankingData(sheet) {
 
   );
 
-
-
-
-
   /*
 
    * RECOLHIMENTO:
@@ -1128,10 +913,6 @@ function getRankingData(sheet) {
 
   );
 
-
-
-
-
   var totalMultiskill =
 
     numeroInteiro(
@@ -1139,10 +920,6 @@ function getRankingData(sheet) {
       values[headerRow][3]
 
     );
-
-
-
-
 
   var totalRecolhimento =
 
@@ -1152,41 +929,21 @@ function getRankingData(sheet) {
 
     );
 
-
-
-
-
   if (!totalMultiskill) {
-
-
 
     totalMultiskill =
 
       multiskill.length;
 
-
-
   }
 
-
-
-
-
   if (!totalRecolhimento) {
-
-
 
     totalRecolhimento =
 
       recolhimento.length;
 
-
-
   }
-
-
-
-
 
   /*
 
@@ -1196,61 +953,29 @@ function getRankingData(sheet) {
 
   var totaisPorMes = {};
 
-
-
-
-
   function registrarTotaisPorMes(lista) {
-
-
 
     lista.forEach(function(item) {
 
-
-
       var mes = item.mes;
-
-
 
       if (!mes) return;
 
-
-
-
-
       if (!totaisPorMes[mes]) {
-
-
 
         totaisPorMes[mes] = {
 
-
-
           multiskill: 0,
-
-
 
           recolhimento: 0
 
-
-
         };
-
-
 
       }
 
-
-
     });
 
-
-
   }
-
-
-
-
 
   registrarTotaisPorMes(
 
@@ -1258,17 +983,11 @@ function getRankingData(sheet) {
 
   );
 
-
-
   registrarTotaisPorMes(
 
     recolhimento
 
   );
-
-
-
-
 
   /*
 
@@ -1286,27 +1005,15 @@ function getRankingData(sheet) {
 
   ) {
 
-
-
     lista.forEach(function(item) {
 
-
-
       if (!item.mes) return;
-
-
-
-
 
       var partes = String(
 
         item.posicao
 
       ).split('/');
-
-
-
-
 
       var total =
 
@@ -1320,13 +1027,7 @@ function getRankingData(sheet) {
 
           : 0;
 
-
-
-
-
       if (total > 0) {
-
-
 
         totaisPorMes[
 
@@ -1344,21 +1045,11 @@ function getRankingData(sheet) {
 
         );
 
-
-
       }
-
-
 
     });
 
-
-
   }
-
-
-
-
 
   atualizarTotalDaLista(
 
@@ -1368,8 +1059,6 @@ function getRankingData(sheet) {
 
   );
 
-
-
   atualizarTotalDaLista(
 
     recolhimento,
@@ -1377,10 +1066,6 @@ function getRankingData(sheet) {
     'recolhimento'
 
   );
-
-
-
-
 
   /*
 
@@ -1396,8 +1081,6 @@ function getRankingData(sheet) {
 
   ).forEach(function(mes) {
 
-
-
     if (
 
       !totaisPorMes[mes]
@@ -1405,8 +1088,6 @@ function getRankingData(sheet) {
         .multiskill
 
     ) {
-
-
 
       totaisPorMes[mes]
 
@@ -1416,23 +1097,13 @@ function getRankingData(sheet) {
 
           function(item) {
 
-
-
             return item.mes === mes;
-
-
 
           }
 
         ).length;
 
-
-
     }
-
-
-
-
 
     if (
 
@@ -1442,8 +1113,6 @@ function getRankingData(sheet) {
 
     ) {
 
-
-
       totaisPorMes[mes]
 
         .recolhimento =
@@ -1452,89 +1121,49 @@ function getRankingData(sheet) {
 
           function(item) {
 
-
-
             return item.mes === mes;
-
-
 
           }
 
         ).length;
 
-
-
     }
-
-
 
   });
 
-
-
-
-
   return {
-
-
 
     multiskill: multiskill,
 
-
-
     recolhimento: recolhimento,
 
-
-
     totais: {
-
-
 
       multiskill:
 
         totalMultiskill,
 
-
-
       recolhimento:
 
         totalRecolhimento
 
-
-
     },
-
-
 
     totaisPorMes:
 
       totaisPorMes
 
-
-
   };
-
-
 
 }
 
-
-
-
-
 function numeroInteiro(valor) {
-
-
 
   var texto = String(
 
     valor || ''
 
   ).replace(/\D/g, '');
-
-
-
-
 
   var numero = parseInt(
 
@@ -1544,23 +1173,13 @@ function numeroInteiro(valor) {
 
   );
 
-
-
-
-
   return isFinite(numero)
 
     ? numero
 
     : 0;
 
-
-
 }
-
-
-
-
 
 /**
 
@@ -1598,39 +1217,21 @@ function numeroInteiro(valor) {
 
 function getFotosRaioX(sheet) {
 
-
-
   var range =
 
     sheet.getDataRange();
-
-
-
-
 
   var values =
 
     range.getValues();
 
-
-
-
-
   var displayValues =
 
     range.getDisplayValues();
 
-
-
-
-
   var formulas =
 
     range.getFormulas();
-
-
-
-
 
   if (
 
@@ -1640,25 +1241,15 @@ function getFotosRaioX(sheet) {
 
   ) {
 
-
-
     return [];
 
-
-
   }
-
-
-
-
 
   function normalizarCabecalhoFoto_(
 
     valor
 
   ) {
-
-
 
     return String(
 
@@ -1680,13 +1271,7 @@ function getFotosRaioX(sheet) {
 
       .toUpperCase();
 
-
-
   }
-
-
-
-
 
   function pareceUrlFoto_(
 
@@ -1694,17 +1279,11 @@ function getFotosRaioX(sheet) {
 
   ) {
 
-
-
     var texto = String(
 
       valor || ''
 
     ).trim();
-
-
-
-
 
     return (
 
@@ -1724,13 +1303,7 @@ function getFotosRaioX(sheet) {
 
     );
 
-
-
   }
-
-
-
-
 
   function extrairUrlFormula_(
 
@@ -1738,31 +1311,17 @@ function getFotosRaioX(sheet) {
 
   ) {
 
-
-
     var texto = String(
 
       formula || ''
 
     ).trim();
 
-
-
-
-
     if (!texto) {
-
-
 
       return '';
 
-
-
     }
-
-
-
-
 
     /*
 
@@ -1770,7 +1329,7 @@ function getFotosRaioX(sheet) {
 
      *
 
-     * =IMAGE("https\://...")
+     * =IMAGE("https\\\\://...")
 
      */
 
@@ -1780,10 +1339,6 @@ function getFotosRaioX(sheet) {
 
     );
 
-
-
-
-
     if (
 
       match &&
@@ -1792,17 +1347,9 @@ function getFotosRaioX(sheet) {
 
     ) {
 
-
-
       return match[1].trim();
 
-
-
     }
-
-
-
-
 
     /*
 
@@ -1818,10 +1365,6 @@ function getFotosRaioX(sheet) {
 
     );
 
-
-
-
-
     if (
 
       match &&
@@ -1830,8 +1373,6 @@ function getFotosRaioX(sheet) {
 
     ) {
 
-
-
       var referencia =
 
         String(
@@ -1839,10 +1380,6 @@ function getFotosRaioX(sheet) {
           match[1]
 
         ).trim();
-
-
-
-
 
       if (
 
@@ -1854,133 +1391,63 @@ function getFotosRaioX(sheet) {
 
       ) {
 
-
-
         return referencia;
-
-
 
       }
 
-
-
     }
-
-
-
-
 
     return '';
 
-
-
   }
-
-
-
-
 
   var headers =
 
     values[0];
 
-
-
-
-
   var nomeCol = -1;
-
-
 
   var fotoCols = [];
 
-
-
-
-
   var nomesAceitos = {
-
-
 
     'NOME': true,
 
-
-
     'NOME COMPLETO': true,
-
-
 
     'COLABORADOR': true,
 
-
-
     'FUNCIONARIO': true,
-
-
 
     'FUNCIONÁRIO': true
 
-
-
   };
-
-
-
-
 
   var fotosAceitas = {
 
-
-
     'FOTO': true,
-
-
 
     'FOTO 2': true,
 
-
-
     'FOTO2': true,
-
-
 
     'LINK FOTO': true,
 
-
-
     'URL FOTO': true,
-
-
 
     'URL DA FOTO': true,
 
-
-
     'LINK DA FOTO': true,
-
-
 
     'IMAGEM': true,
 
-
-
     'IMAGE': true,
-
-
 
     'PHOTO': true,
 
-
-
     'PICTURE': true
 
-
-
   };
-
-
-
-
 
   for (
 
@@ -1992,8 +1459,6 @@ function getFotosRaioX(sheet) {
 
   ) {
 
-
-
     var header =
 
       normalizarCabecalhoFoto_(
@@ -2001,10 +1466,6 @@ function getFotosRaioX(sheet) {
         headers[c]
 
       );
-
-
-
-
 
     if (
 
@@ -2014,17 +1475,9 @@ function getFotosRaioX(sheet) {
 
     ) {
 
-
-
       nomeCol = c;
 
-
-
     }
-
-
-
-
 
     if (
 
@@ -2032,41 +1485,19 @@ function getFotosRaioX(sheet) {
 
     ) {
 
-
-
       fotoCols.push(c);
-
-
 
     }
 
-
-
   }
-
-
-
-
 
   if (nomeCol === -1) {
 
-
-
     return [];
-
-
 
   }
 
-
-
-
-
   var resultado = [];
-
-
-
-
 
   for (
 
@@ -2078,8 +1509,6 @@ function getFotosRaioX(sheet) {
 
   ) {
 
-
-
     var nome = String(
 
       displayValues[r][nomeCol] ||
@@ -2090,29 +1519,13 @@ function getFotosRaioX(sheet) {
 
     ).trim();
 
-
-
-
-
     if (!nome) {
-
-
 
       continue;
 
-
-
     }
 
-
-
-
-
     var foto = '';
-
-
-
-
 
     /*
 
@@ -2132,15 +1545,9 @@ function getFotosRaioX(sheet) {
 
     ) {
 
-
-
       var col =
 
         fotoCols[f];
-
-
-
-
 
       var valorDisplay =
 
@@ -2152,10 +1559,6 @@ function getFotosRaioX(sheet) {
 
         ).trim();
 
-
-
-
-
       var valorRaw =
 
         String(
@@ -2165,10 +1568,6 @@ function getFotosRaioX(sheet) {
           ''
 
         ).trim();
-
-
-
-
 
       var valorFormula =
 
@@ -2180,10 +1579,6 @@ function getFotosRaioX(sheet) {
 
         ).trim();
 
-
-
-
-
       if (
 
         pareceUrlFoto_(
@@ -2194,23 +1589,13 @@ function getFotosRaioX(sheet) {
 
       ) {
 
-
-
         foto =
 
           valorDisplay;
 
-
-
         break;
 
-
-
       }
-
-
-
-
 
       if (
 
@@ -2222,23 +1607,13 @@ function getFotosRaioX(sheet) {
 
       ) {
 
-
-
         foto =
 
           valorRaw;
 
-
-
         break;
 
-
-
       }
-
-
-
-
 
       var urlFormula =
 
@@ -2248,65 +1623,31 @@ function getFotosRaioX(sheet) {
 
         );
 
-
-
-
-
       if (urlFormula) {
-
-
 
         foto =
 
           urlFormula;
 
-
-
         break;
-
-
 
       }
 
-
-
     }
-
-
-
-
 
     resultado.push({
 
-
-
       nome: nome,
-
-
 
       foto: foto
 
-
-
     });
-
-
 
   }
 
-
-
-
-
   return resultado;
 
-
-
 }
-
-
-
-
 
 /**
 
@@ -2316,17 +1657,11 @@ function getFotosRaioX(sheet) {
 
 function getSheetData(sheet) {
 
-
-
   var data =
 
     sheet.getDataRange()
 
       .getValues();
-
-
-
-
 
   var displayData =
 
@@ -2334,41 +1669,21 @@ function getSheetData(sheet) {
 
       .getDisplayValues();
 
-
-
-
-
   if (
 
     data.length < 2
 
   ) {
 
-
-
     return [];
 
-
-
   }
-
-
-
-
 
   var headers =
 
     data[0];
 
-
-
-
-
   var result = [];
-
-
-
-
 
   for (
 
@@ -2380,33 +1695,17 @@ function getSheetData(sheet) {
 
   ) {
 
-
-
     var row =
 
       data[i];
-
-
-
-
 
     var displayRow =
 
       displayData[i];
 
-
-
-
-
     var obj = {};
 
-
-
     var hasContent = false;
-
-
-
-
 
     for (
 
@@ -2418,8 +1717,6 @@ function getSheetData(sheet) {
 
     ) {
 
-
-
       var headerName =
 
         String(
@@ -2428,49 +1725,29 @@ function getSheetData(sheet) {
 
         ).trim();
 
-
-
-
-
       if (
 
         headerName !== ''
 
       ) {
 
-
-
         var rawVal =
 
           row[j];
-
-
-
-
 
         var displayVal =
 
           displayRow[j];
 
-
-
-
-
         var cellValue =
 
           rawVal;
-
-
-
-
 
         if (
 
           rawVal instanceof Date
 
         ) {
-
-
 
           if (
 
@@ -2480,17 +1757,11 @@ function getSheetData(sheet) {
 
           ) {
 
-
-
             cellValue =
 
               displayVal;
 
-
-
           } else {
-
-
 
             cellValue =
 
@@ -2504,11 +1775,7 @@ function getSheetData(sheet) {
 
               );
 
-
-
           }
-
-
 
         } else if (
 
@@ -2518,27 +1785,15 @@ function getSheetData(sheet) {
 
         ) {
 
-
-
           cellValue =
 
             displayVal;
 
-
-
         }
-
-
-
-
 
         obj[headerName] =
 
           cellValue;
-
-
-
-
 
         if (
 
@@ -2550,211 +1805,268 @@ function getSheetData(sheet) {
 
         ) {
 
-
-
           hasContent =
 
             true;
 
-
-
         }
-
-
 
       }
 
-
-
     }
-
-
-
-
 
     if (hasContent) {
 
-
-
       result.push(obj);
-
-
 
     }
 
-
-
   }
-
-
-
-
 
   return result;
 
-
-
 }
 
 /**
+
  * E-mail autorizado a acessar o Monitoramento.
+
  */
+
 var EMAIL_ADMIN_MONITORAMENTO_ = 'laize.beserra@grupobrisanet.com.br';
 
-
 /**
+
  * Valida o acesso à página administrativa.
+
  */
+
 function validarAdminMonitoramento_() {
 
   var email = String(Session.getActiveUser().getEmail() || '')
+
     .trim()
+
     .toLowerCase();
 
   if (!email) {
+
     throw new Error(
+
       'Não foi possível identificar sua conta Google corporativa.'
+
     );
+
   }
 
   if (email !== EMAIL_ADMIN_MONITORAMENTO_) {
+
     throw new Error(
+
       'Você não possui permissão para acessar o Monitoramento de Acessos.'
+
     );
+
   }
 
   return email;
+
 }
 
-
 /**
+
  * Registra cada abertura do painel principal.
+
  *
+
  * Cria automaticamente a aba LOG_ACESSOS se ela ainda não existir.
+
  *
+
  * Colunas:
+
  * A = DATA
+
  * B = HORA
+
  * C = E-MAIL
+
  * D = COLABORADOR
+
  */
+
 function registrarAcesso_(email) {
 
   try {
 
     var ss = SpreadsheetApp.getActiveSpreadsheet();
+
     var sheetAcessos = ss.getSheetByName('ACESSOS');
 
     if (!sheetAcessos) {
+
       return;
+
     }
 
     var sheetLog = ss.getSheetByName('LOG_ACESSOS');
 
     if (!sheetLog) {
+
       sheetLog = ss.insertSheet('LOG_ACESSOS');
 
       sheetLog.getRange(1, 1, 1, 4).setValues([[
+
         'DATA',
+
         'HORA',
+
         'E-MAIL',
+
         'COLABORADOR'
+
       ]]);
 
       sheetLog.getRange(1, 1, 1, 4)
+
         .setFontWeight('bold');
 
       sheetLog.setFrozenRows(1);
+
     }
 
     var emailNormalizado = String(email || '')
+
       .trim()
+
       .toLowerCase();
 
     var nome = '';
+
     var lastRow = sheetAcessos.getLastRow();
 
     if (lastRow >= 2) {
 
       var dados = sheetAcessos
+
         .getRange(2, 1, lastRow - 1, 2)
+
         .getDisplayValues();
 
       for (var i = 0; i < dados.length; i++) {
 
         var emailAcessos = String(dados[i][0] || '')
+
           .trim()
+
           .toLowerCase();
 
         if (emailAcessos === emailNormalizado) {
+
           nome = String(dados[i][1] || '').trim();
+
           break;
+
         }
+
       }
+
     }
 
     var agora = new Date();
+
     var timezone = Session.getScriptTimeZone();
 
     var data = Utilities.formatDate(
+
       agora,
+
       timezone,
+
       'dd/MM/yyyy'
+
     );
 
     var hora = Utilities.formatDate(
+
       agora,
+
       timezone,
+
       'HH:mm:ss'
+
     );
 
     sheetLog.appendRow([
+
       data,
+
       hora,
+
       emailNormalizado,
+
       nome
+
     ]);
 
   } catch (erro) {
 
     // O registro de acesso não pode impedir a abertura do painel.
+
     console.error(
+
       'Erro ao registrar acesso: ' + erro.message
+
     );
+
   }
+
 }
 
-
 /**
+
  * Retorna os dados do monitoramento.
+
  * Somente o e-mail administrativo pode executar esta função.
+
  */
+
 function getMonitoramentoData() {
 
   validarAdminMonitoramento_();
 
   var ss = SpreadsheetApp.getActiveSpreadsheet();
+
   var sheetAcessos = ss.getSheetByName('ACESSOS');
+
   var sheetLog = ss.getSheetByName('LOG_ACESSOS');
 
   if (!sheetAcessos) {
+
     throw new Error('A aba ACESSOS não foi encontrada.');
+
   }
 
   var totalAutorizados = 0;
+
   var autorizados = {};
+
   var lastRowAcessos = sheetAcessos.getLastRow();
 
   if (lastRowAcessos >= 2) {
 
     var dadosAcessos = sheetAcessos
+
       .getRange(2, 1, lastRowAcessos - 1, 2)
+
       .getDisplayValues();
 
     dadosAcessos.forEach(function(row) {
 
       var email = String(row[0] || '')
+
         .trim()
+
         .toLowerCase();
 
       var nome = String(row[1] || '').trim();
@@ -2764,25 +2076,37 @@ function getMonitoramentoData() {
       totalAutorizados++;
 
       autorizados[email] = {
+
         email: email,
+
         nome: nome
+
       };
+
     });
+
   }
 
   var acessosHoje = [];
+
   var emailsQueAcessaramHoje = {};
 
   if (sheetLog && sheetLog.getLastRow() >= 2) {
 
     var dadosLog = sheetLog
+
       .getRange(2, 1, sheetLog.getLastRow() - 1, 4)
+
       .getDisplayValues();
 
     var hoje = Utilities.formatDate(
+
       new Date(),
+
       Session.getScriptTimeZone(),
+
       'dd/MM/yyyy'
+
     );
 
     dadosLog.forEach(function(row) {
@@ -2792,9 +2116,13 @@ function getMonitoramentoData() {
       if (data !== hoje) return;
 
       var hora = String(row[1] || '').trim();
+
       var email = String(row[2] || '')
+
         .trim()
+
         .toLowerCase();
+
       var nome = String(row[3] || '').trim();
 
       if (!email) return;
@@ -2802,16 +2130,25 @@ function getMonitoramentoData() {
       emailsQueAcessaramHoje[email] = true;
 
       acessosHoje.push({
+
         data: data,
+
         hora: hora,
+
         email: email,
+
         nome: nome
+
       });
+
     });
+
   }
 
   acessosHoje.sort(function(a, b) {
+
     return String(b.hora).localeCompare(String(a.hora));
+
   });
 
   var naoAcessaramHoje = [];
@@ -2821,78 +2158,455 @@ function getMonitoramentoData() {
     if (!emailsQueAcessaramHoje[email]) {
 
       naoAcessaramHoje.push({
+
         email: autorizados[email].email,
+
         nome: autorizados[email].nome
+
       });
+
     }
+
   });
 
   naoAcessaramHoje.sort(function(a, b) {
+
     return String(a.nome).localeCompare(
+
       String(b.nome),
+
       'pt-BR'
+
     );
+
   });
 
   var ultimoAcesso = acessosHoje.length
+
     ? acessosHoje[0]
+
     : null;
 
   // Volume de acessos do mês atual, do dia 01 até hoje.
+
   var agora = new Date();
+
   var timezone = Session.getScriptTimeZone();
+
   var mesAtual = Utilities.formatDate(agora, timezone, 'MM');
+
   var anoAtual = Utilities.formatDate(agora, timezone, 'yyyy');
+
   var diaAtual = Number(Utilities.formatDate(agora, timezone, 'dd'));
 
   var volumePorDia = {};
 
   for (var dia = 1; dia <= diaAtual; dia++) {
+
     volumePorDia[dia] = 0;
+
   }
 
   if (sheetLog && sheetLog.getLastRow() >= 2) {
 
     var dadosLogMes = sheetLog
+
       .getRange(2, 1, sheetLog.getLastRow() - 1, 4)
+
       .getDisplayValues();
 
     dadosLogMes.forEach(function(row) {
 
       var dataLog = String(row[0] || '').trim();
+
       var partes = dataLog.split('/');
 
       if (partes.length !== 3) return;
 
       var diaLog = Number(partes[0]);
+
       var mesLog = String(partes[1] || '');
+
       var anoLog = String(partes[2] || '');
 
       if (mesLog !== mesAtual || anoLog !== anoAtual) return;
+
       if (!diaLog || diaLog < 1 || diaLog > diaAtual) return;
 
       volumePorDia[diaLog] = (volumePorDia[diaLog] || 0) + 1;
+
     });
+
   }
 
   var volumeAcessosMes = [];
 
   for (var diaMes = 1; diaMes <= diaAtual; diaMes++) {
+
     volumeAcessosMes.push({
+
       dia: diaMes,
+
       valor: volumePorDia[diaMes] || 0
+
     });
+
   }
 
   return {
+
     data: Utilities.formatDate(agora, timezone, 'dd/MM/yyyy'),
+
     totalAutorizados: totalAutorizados,
+
     acessaramHoje: Object.keys(emailsQueAcessaramHoje).length,
+
     naoAcessaramHoje: naoAcessaramHoje.length,
+
     ultimoAcesso: ultimoAcesso,
+
     acessosHoje: acessosHoje,
+
     listaNaoAcessaramHoje: naoAcessaramHoje,
+
     volumeAcessosMes: volumeAcessosMes
+
   };
+
 }
 
+/**
+
+ * CHECK - PONTO POR CABEÇA
+
+ * Lista colaboradores com mais de 45 dias de empresa e pontuação igual a zero.
+
+ * Função de leitura: não grava nem altera dados da planilha.
+
+ */
+
+/** Retorna nome e nível de acesso da aba ACESSOS (A=email, B=nome, C=acesso). */
+function obterUsuarioAcessoCheck_(email) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName('ACESSOS');
+  if (!sh) throw new Error('A aba ACESSOS não foi encontrada.');
+  var last = sh.getLastRow();
+  if (last < 2) throw new Error('A aba ACESSOS não possui usuários cadastrados.');
+  var rows = sh.getRange(2, 1, last - 1, 3).getDisplayValues();
+  var emailNormalizado = String(email || '').trim().toLowerCase();
+  for (var i = 0; i < rows.length; i++) {
+    if (String(rows[i][0] || '').trim().toLowerCase() === emailNormalizado) {
+      return {
+        nome: String(rows[i][1] || '').trim(),
+        acesso: String(rows[i][2] || '').trim().toUpperCase()
+      };
+    }
+  }
+  throw new Error('Seu usuário não foi encontrado na aba ACESSOS.');
+}
+
+function getCheckPpcData() {
+
+  var emailLogado = validarAcesso_();
+  var usuarioCheck = obterUsuarioAcessoCheck_(emailLogado);
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  var aba = ss.getSheetByName('PPC');
+
+  if (!aba) throw new Error('A aba "PPC" não foi encontrada.');
+
+  var dados = aba.getDataRange().getDisplayValues();
+
+  if (dados.length < 2) {
+
+    return JSON.stringify({ sucesso: true, total: 0, colaboradores: [] });
+
+  }
+
+  function normalizar(valor) {
+
+    return String(valor == null ? '' : valor)
+
+      .normalize('NFD')
+
+      .replace(/[\u0300-\u036f]/g, '')
+
+      .toUpperCase()
+
+      .replace(/[^A-Z0-9]/g, '');
+
+  }
+
+  var cabecalhos = dados[0].map(normalizar);
+
+  function localizarColuna(opcoes) {
+
+    for (var i = 0; i < opcoes.length; i++) {
+
+      var indice = cabecalhos.indexOf(normalizar(opcoes[i]));
+
+      if (indice !== -1) return indice;
+
+    }
+
+    return -1;
+
+  }
+
+  function numero(valor) {
+
+    var texto = String(valor == null ? '' : valor).trim();
+
+    if (!texto) return NaN;
+
+    texto = texto.replace(/\s/g, '');
+
+    // Formato brasileiro: 1.234,56 -> 1234.56; 8,24 -> 8.24
+
+    if (texto.indexOf(',') !== -1) {
+
+      texto = texto.replace(/\./g, '').replace(',', '.');
+
+    }
+
+    var n = Number(texto);
+
+    return isFinite(n) ? n : NaN;
+
+  }
+
+  function celula(linha, indice) {
+
+    return indice >= 0 ? String(linha[indice] == null ? '' : linha[indice]).trim() : '';
+
+  }
+
+  var col = {
+
+    supervisor: localizarColuna(['NOME', 'SUPERVISOR']),
+
+    funcionario: localizarColuna(['FUNCIONARIO', 'COLABORADOR']),
+
+    coordenador: localizarColuna(['COORDENADOR DE CAMPO', 'COORDENADOR']),
+
+    equipe: localizarColuna(['GERENTE DE CAMPO', 'EQUIPE', 'GERENTE']),
+
+    diasEmpresa: localizarColuna(['DIAS DE EMPRESA', 'DIAS EMPRESA', 'TEMPO DE EMPRESA']),
+
+    // IMPORTANTE: exige o cabeçalho PPC exato; não confunde com PONTUAÇÃO.
+
+    ppc: localizarColuna(['PPC']),
+
+    situacao: localizarColuna(['SITUACAO', 'STATUS'])
+
+  };
+
+  var faltantes = [];
+
+  if (col.funcionario < 0) faltantes.push('FUNCIONARIO');
+
+  if (col.diasEmpresa < 0) faltantes.push('DIAS DE EMPRESA');
+
+  if (col.ppc < 0) faltantes.push('PPC');
+
+  if (faltantes.length) {
+
+    throw new Error('Na aba PPC, não encontrei estes cabeçalhos na primeira linha: ' +
+
+      faltantes.join(', ') + '. Confira o texto dos cabeçalhos.');
+
+  }
+
+  var colaboradores = [];
+
+  for (var r = 1; r < dados.length; r++) {
+
+    var linha = dados[r];
+
+    var funcionarioOriginal = celula(linha, col.funcionario);
+
+    var dias = numero(linha[col.diasEmpresa]);
+
+    var pontosPpc = numero(linha[col.ppc]);
+
+    if (!funcionarioOriginal || !isFinite(dias) || !isFinite(pontosPpc)) continue;
+
+    if (dias <= 45 || pontosPpc !== 0) continue;
+    var perfilPpc = normalizarPerfilCheck_(usuarioCheck.acesso);
+    if (!perfilPpc) throw new Error('Perfil não autorizado para o Check Ponto por Cabeça.');
+    if (perfilPpc === 'SUPERVISOR' && normalizar(celula(linha, col.supervisor)) !== normalizar(usuarioCheck.nome)) continue;
+    if (perfilPpc === 'COORDENADOR' && normalizar(celula(linha, col.coordenador)) !== normalizar(usuarioCheck.nome)) continue;
+
+    var matriculaMatch = funcionarioOriginal.match(/[-–]\s*(\d+)\s*$/);
+
+    colaboradores.push({
+
+      supervisor: celula(linha, col.supervisor),
+
+      funcionario: funcionarioOriginal.replace(/\s*[-–]\s*\d+\s*$/, '').trim(),
+
+      matricula: matriculaMatch ? matriculaMatch[1] : '',
+
+      coordenador: celula(linha, col.coordenador),
+
+      equipe: celula(linha, col.equipe),
+
+      diasEmpresa: dias,
+
+      pontuacao: pontosPpc,
+
+      situacao: celula(linha, col.situacao),
+
+      indicador: 'Ponto por Cabeça',
+
+      status: 'Pendente do supervisor',
+
+      statusCheck: 'Aguardando aprovação do supervisor'
+
+    });
+
+  }
+
+  colaboradores.sort(function(a, b) {
+
+    return a.funcionario.localeCompare(b.funcionario, 'pt-BR');
+
+  });
+
+  return JSON.stringify({
+
+    sucesso: true,
+
+    total: colaboradores.length,
+
+    colaboradores: colaboradores
+
+  });
+
+}
+
+
+/**
+ * CHECK - CARREGAMENTO COM ESCOPO HIERÁRQUICO.
+ * Este endpoint é usado exclusivamente pelo HTML Check.
+ * Não altera getDashboardData() nem a validação usada pelas demais páginas.
+ */
+function getDashboardDataForCheck() {
+  var email = validarAcesso_();
+  var usuario = obterUsuarioAcessoCheck_(email);
+  var perfil = normalizarPerfilCheck_(usuario.acesso);
+  if (!perfil) throw new Error('Seu perfil não está autorizado para os checks. Use SUPERVISOR, COORDENADOR ou DIRETOR na aba ACESSOS.');
+
+  var payload = JSON.parse(getDashboardData());
+  var raioxCompleto = Array.isArray(payload.raiox) ? payload.raiox : [];
+  var nomesSupervisores = [];
+
+  function valor(obj, opcoes) {
+    if (!obj || typeof obj !== 'object') return '';
+    var chaves = Object.keys(obj);
+    var procuradas = opcoes.map(normalizarChaveCheck_);
+    for (var i = 0; i < chaves.length; i++) {
+      if (procuradas.indexOf(normalizarChaveCheck_(chaves[i])) !== -1) {
+        var v = obj[chaves[i]];
+        if (v !== null && v !== undefined && String(v).trim() !== '') return String(v).trim();
+      }
+    }
+    return '';
+  }
+  function adicionarNome(nome) {
+    var n = String(nome || '').trim();
+    if (n && nomesSupervisores.map(normalizarValorCheck_).indexOf(normalizarValorCheck_(n)) === -1) nomesSupervisores.push(n);
+  }
+  function igual(a, b) { return normalizarValorCheck_(a) !== '' && normalizarValorCheck_(a) === normalizarValorCheck_(b); }
+  function emLista(v, lista) { return lista.some(function(x) { return igual(v, x); }); }
+
+  if (perfil === 'SUPERVISOR') {
+    adicionarNome(usuario.nome);
+  } else if (perfil === 'COORDENADOR') {
+    raioxCompleto.forEach(function(r) {
+      var coord = valor(r, ['COORDENADOR DE CAMPO', 'COORDENADOR']);
+      var nome = valor(r, ['NOME', 'SUPERVISOR']);
+      if (igual(coord, usuario.nome)) adicionarNome(nome);
+    });
+    // Fail closed: coordinator without any mapped supervisors should not receive broad data.
+    if (!nomesSupervisores.length) {
+      throw new Error('Não encontrei supervisores vinculados a este coordenador na coluna COORDENADOR DE CAMPO da aba RAIO X. Confira o nome cadastrado em ACESSOS.');
+    }
+  } else {
+    raioxCompleto.forEach(function(r) { adicionarNome(valor(r, ['NOME', 'SUPERVISOR'])); });
+  }
+
+  function filtrarRegistro(registro, nomeRaioX) {
+    if (perfil === 'DIRETOR') return true;
+    var supervisor = valor(registro, ['SUPERVISOR', 'NOME DO SUPERVISOR', 'SUPERVISOR RESPONSAVEL', 'SUPERVISOR RESPONSÁVEL', 'RESPONSAVEL DIRETO', 'RESPONSÁVEL DIRETO']);
+    var coordenador = valor(registro, ['COORDENADOR DE CAMPO', 'COORDENADOR']);
+    var nome = valor(registro, ['NOME', 'COLABORADOR', 'FUNCIONARIO', 'FUNCIONÁRIO', 'CHAVE', 'NOME COMPLETO']);
+
+    if (perfil === 'SUPERVISOR') {
+      if (supervisor) return igual(supervisor, usuario.nome);
+      // Algumas tabelas representam o supervisor na coluna NOME, em vez de uma coluna SUPERVISOR.
+      if (nomeRaioX) return igual(nome, usuario.nome);
+      return emLista(nome, nomesSupervisores);
+    }
+    if (coordenador && igual(coordenador, usuario.nome)) return true;
+    if (supervisor && emLista(supervisor, nomesSupervisores)) return true;
+    if (nomeRaioX && emLista(nome, nomesSupervisores)) return true;
+    // Sem um campo que permita provar a relação hierárquica, não liberar o registro.
+    return false;
+  }
+
+  payload.raiox = raioxCompleto.filter(function(r) { return filtrarRegistro(r, true); });
+  payload.fotosRaioX = (Array.isArray(payload.fotosRaioX) ? payload.fotosRaioX : []).filter(function(r) {
+    if (perfil === 'DIRETOR') return true;
+    var nome = valor(r, ['NOME', 'COLABORADOR', 'FUNCIONARIO', 'FUNCIONÁRIO']);
+    return emLista(nome, nomesSupervisores);
+  });
+
+  var chavesArray = [
+    'pcc', 'tam', 'abst', 'kml', 'analiticoKml', 'acidentes', 'inspecao',
+    'tratarPonto', 'bhHe', 'gpsPonto', 'analiticoGpsPonto', 'recorrencia',
+    'material', 'analiticoMaterial', 'veiculosParados', 'indicadoresCidades',
+    'quartil4', 'improdutiva', 'instaladosEfetivados'
+  ];
+  chavesArray.forEach(function(chave) {
+    if (Array.isArray(payload[chave])) {
+      payload[chave] = payload[chave].filter(function(r) { return filtrarRegistro(r, false); });
+    }
+  });
+
+  if (payload.ranking && typeof payload.ranking === 'object') {
+    ['multiskill', 'recolhimento'].forEach(function(bloco) {
+      if (Array.isArray(payload.ranking[bloco])) {
+        payload.ranking[bloco] = payload.ranking[bloco].filter(function(r) { return filtrarRegistro(r, false); });
+      }
+    });
+    payload.ranking.totais = {
+      multiskill: (payload.ranking.multiskill || []).length,
+      recolhimento: (payload.ranking.recolhimento || []).length
+    };
+  }
+
+  payload.checkAccess = {
+    email: email,
+    nome: usuario.nome,
+    perfil: perfil,
+    coordenador: perfil === 'COORDENADOR' ? usuario.nome : '',
+    supervisoresPermitidos: nomesSupervisores
+  };
+  return JSON.stringify(payload);
+}
+
+function normalizarPerfilCheck_(perfil) {
+  var p = normalizarValorCheck_(perfil);
+  if (p === 'SUPERVISOR') return 'SUPERVISOR';
+  if (p === 'COORDENADOR') return 'COORDENADOR';
+  if (p === 'DIRETOR' || p === 'DIRETORA') return 'DIRETOR';
+  return '';
+}
+function normalizarValorCheck_(valor) {
+  return String(valor == null ? '' : valor).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+}
+function normalizarChaveCheck_(valor) {
+  return normalizarValorCheck_(valor);
+}
