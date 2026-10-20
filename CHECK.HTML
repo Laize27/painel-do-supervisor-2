@@ -546,20 +546,6 @@
         padding: 5px 8px !important;
       }
 
-      body.tv-mode .colab-cities-container {
-        margin-top: 5px !important;
-        padding-top: 5px !important;
-      }
-
-      body.tv-mode .colab-cities-label {
-        font-size: 10px !important;
-      }
-
-      body.tv-mode .city-chip {
-        font-size: 10px !important;
-        padding: 3px 7px !important;
-      }
-
       /* Modo TV: grade mais compacta, com menos espaço entre os cards. */
       body.tv-mode .kpi-grid {
         grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -1037,51 +1023,6 @@
         color: var(--text-muted); 
         border-color: var(--border-color); 
       }
-
-      .colab-cities-container {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 12px;
-        padding-top: 10px;
-        border-top: 1px dashed var(--border-color);
-      }
-
-      .colab-cities-label {
-        font-size: 11px;
-        font-weight: 700;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        margin-right: 4px;
-        white-space: nowrap;
-        flex: 0 0 auto;
-        min-width: max-content;
-      }
-
-      .city-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background-color: var(--bg-input);
-        color: var(--text-main);
-        border: 1px solid var(--border-color);
-        padding: 4px 10px;
-        border-radius: 6px;
-        font-size: 11px;
-        font-weight: 600;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-      }
-
-      .city-chip i {
-        color: var(--primary);
-        font-size: 10px;
-      }
-
       .section-title-kpi { 
         font-size: 12px; 
         font-weight: 700; 
@@ -1505,6 +1446,8 @@
       .bar-warning { background-color: #f9a825; } body.dark-mode .bar-warning { background-color: #ffca28; }
       .bar-neutral { background-color: #cfd4da !important; }
       body.dark-mode .bar-neutral { background-color: #4b515a !important; }
+
+      body.modal-open { overflow: hidden; }
 
       .modal-overlay { 
         display: none; 
@@ -3248,8 +3191,7 @@
       }
 
       body.dark-mode .section-title-kpi,
-      body.dark-mode .meta-item,
-      body.dark-mode .colab-cities-label {
+      body.dark-mode .meta-item {
         color: #b8c1cc;
       }
       body.dark-mode .collaborator-name,
@@ -3285,8 +3227,7 @@
 
       /* HISTÓRICO DE QUARTIL DE PRODUÇÃO */
       /* HISTÓRICOS E CIDADES OCUPAM TODA A LARGURA DO CARD, ABAIXO DA FOTO + DADOS */
-      .collaborator-card > .quartil-producao-history,
-      .collaborator-card > .colab-cities-container {
+      .collaborator-card > .quartil-producao-history {
         width: 100%;
         min-width: 0;
       }
@@ -4825,7 +4766,7 @@ sem os tons escuros atuais.
   .kpi-grid > .kpi-dropiat-stack { display:flex !important; flex-direction:column !important; align-self:start; min-width:0; width:100%; }
   .kpi-dropiat-stack > #cardDropIat, .kpi-dropiat-stack > #checkDropIatCard { width:100%; grid-column:auto; }
   #modalCheckDropIat .check-ppc-modal-container { width:98%; max-width:1500px; }
-  #modalCheckDropIat .check-ppc-table { min-width:1150px; table-layout:auto; }
+  #modalCheckDropIat .check-ppc-table { min-width:1700px; table-layout:auto; }
   #modalCheckDropIat .check-ppc-table th, #modalCheckDropIat .check-ppc-table td { white-space:nowrap; padding:9px 8px; }
   #modalCheckDropIat .check-ppc-table th:first-child, #modalCheckDropIat .check-ppc-table td:first-child { min-width:230px; white-space:normal; }
   .kpi-conectorinst-stack > #cardConectorInst, .kpi-conectorinst-stack > #checkConectorInstalacaoCard { width:100%; grid-column:auto; }
@@ -4860,18 +4801,27 @@ sem os tons escuros atuais.
   #checkBhHePtCard .check-ppc-heading { min-width: 0; }
   #checkBhHePtCard .check-ppc-heading strong { font-size: 9px; line-height: 1.25; font-weight: 700; letter-spacing: .05px; white-space: nowrap; }
   #checkBhHePtCard .check-ppc-card-top { gap: 7px; }
-  #modalCheckBhHePt .check-ppc-modal-container { width: 96%; max-width: 1450px; }
-  #modalCheckBhHePt .check-ppc-table { width: 100%; min-width: 920px; table-layout: fixed; }
-  /* Redistribuição das 6 colunas: reduzir PT/HE/motivo e dar mais espaço à observação e ao botão. */
-  #modalCheckBhHePt .check-ppc-table th:nth-child(1), #modalCheckBhHePt .check-ppc-table td:nth-child(1) { width: 24%; white-space: normal; overflow-wrap: anywhere; }
-  #modalCheckBhHePt .check-ppc-table th:nth-child(2), #modalCheckBhHePt .check-ppc-table td:nth-child(2) { width: 7%; white-space: nowrap; }
-  #modalCheckBhHePt .check-ppc-table th:nth-child(3), #modalCheckBhHePt .check-ppc-table td:nth-child(3) { width: 11%; white-space: nowrap; }
-  #modalCheckBhHePt .check-ppc-table th:nth-child(4), #modalCheckBhHePt .check-ppc-table td:nth-child(4) { width: 18%; white-space: normal; overflow-wrap: anywhere; }
-  #modalCheckBhHePt .check-ppc-table th:nth-child(5), #modalCheckBhHePt .check-ppc-table td:nth-child(5) { width: 23%; white-space: normal; }
-  #modalCheckBhHePt .check-ppc-table th:nth-child(6), #modalCheckBhHePt .check-ppc-table td:nth-child(6) { width: 17%; }
-  #modalCheckBhHePt .check-ppc-observation { min-width: 0; width: 100%; box-sizing: border-box; }
-  #modalCheckBhHePt .check-ppc-action-cell { min-width: 0; padding-left: 6px; padding-right: 6px; }
-  #modalCheckBhHePt .check-ppc-action-btn { width: 100%; min-width: 0; padding: 9px 7px; font-size: 10px; line-height: 1.25; white-space: normal; }
+  #modalCheckBhHePt .check-ppc-modal-container { width: 99.5vw !important; max-width: 2200px !important; }
+  #modalCheckBhHePt .check-ppc-modal-body { width:100%; min-width:0; }
+  #modalCheckBhHePt .check-ppc-table-wrap { width:100%; max-width:100%; overflow-x:auto; overflow-y:visible; }
+  #modalCheckBhHePt .check-ppc-table { width:100%; min-width:1900px; table-layout:fixed; }
+  /* Modal e tabela ampliados para dar espaço real à observação do coordenador. */
+  #modalCheckBhHePt .check-ppc-table th, #modalCheckBhHePt .check-ppc-table td { box-sizing:border-box; padding:9px 8px; vertical-align:middle; }
+  #modalCheckBhHePt .check-ppc-table th:nth-child(1), #modalCheckBhHePt .check-ppc-table td:nth-child(1) { width:16%; min-width:230px; white-space:normal; overflow-wrap:anywhere; }
+  #modalCheckBhHePt .check-ppc-table th:nth-child(2), #modalCheckBhHePt .check-ppc-table td:nth-child(2) { width:6%; min-width:80px; white-space:nowrap; }
+  #modalCheckBhHePt .check-ppc-table th:nth-child(3), #modalCheckBhHePt .check-ppc-table td:nth-child(3) { width:9%; min-width:130px; white-space:nowrap; }
+  #modalCheckBhHePt .check-ppc-table th:nth-child(4), #modalCheckBhHePt .check-ppc-table td:nth-child(4) { width:12%; min-width:170px; white-space:normal; overflow-wrap:anywhere; }
+  #modalCheckBhHePt .check-ppc-table th:nth-child(5), #modalCheckBhHePt .check-ppc-table td:nth-child(5) { width:12%; min-width:190px; white-space:normal; }
+  #modalCheckBhHePt .check-ppc-table th:nth-child(6), #modalCheckBhHePt .check-ppc-table td:nth-child(6) { width:12%; min-width:190px; white-space:normal; }
+  #modalCheckBhHePt .check-ppc-table th:nth-child(7), #modalCheckBhHePt .check-ppc-table td:nth-child(7) { width:8%; min-width:125px; }
+  #modalCheckBhHePt .check-ppc-table th:nth-child(8), #modalCheckBhHePt .check-ppc-table td:nth-child(8) { width:14%; min-width:250px; }
+  #modalCheckBhHePt .check-ppc-table th:nth-child(9), #modalCheckBhHePt .check-ppc-table td:nth-child(9) { width:5.5%; min-width:105px; }
+  #modalCheckBhHePt .check-ppc-table th:nth-child(10), #modalCheckBhHePt .check-ppc-table td:nth-child(10) { width:5.5%; min-width:105px; }
+  #modalCheckBhHePt .check-ppc-observation { min-width:170px; width:100%; box-sizing:border-box; }
+  #modalCheckBhHePt .check-coordinator-observation { min-width:230px !important; width:100%; min-height:52px; box-sizing:border-box; resize:vertical; white-space:normal; }
+  #modalCheckBhHePt .check-ppc-action-cell { min-width:0; padding-left:5px; padding-right:5px; }
+  #modalCheckBhHePt .check-ppc-action-btn, #modalCheckBhHePt .check-coordinator-approve-btn, #modalCheckBhHePt .check-coordinator-reject-btn { width:100%; min-width:0; padding:8px 5px; font-size:9px; line-height:1.2; white-space:normal; overflow-wrap:anywhere; }
+  @media (max-width: 1000px) { #modalCheckBhHePt .check-ppc-modal-container { width:99.5vw !important; } #modalCheckBhHePt .check-ppc-table { min-width:1900px; } }
 
   /* Tabela do CHECK TAM ABASTECIMENTO/CLIENTE */
   #modalCheckAbsCliente .check-ppc-modal-container { width: 98%; max-width: 1600px; }
@@ -4900,6 +4850,21 @@ sem os tons escuros atuais.
   #modalCheckLitragemRepetida .check-ppc-action-btn { width: 100%; min-width: 110px; padding: 8px 7px; font-size: 10px; line-height: 1.25; white-space: normal; }
   #modalCheckLitragemRepetida .check-ppc-observation { width: 100%; min-width: 100px; box-sizing: border-box; }
   @media (max-width: 700px) { #modalCheckLitragemRepetida .check-ppc-modal-container { width: 98%; } #modalCheckLitragemRepetida .check-ppc-table { min-width: 1350px; } }
+
+  /* Check de veículos parados: tabela responsiva com colunas de veículo, dias e encaminhamento. */
+  #modalCheckVeiculosParados .check-ppc-modal-container { width: 96%; max-width: 1500px; }
+  #modalCheckVeiculosParados .check-ppc-table { width: 100%; min-width: 1120px; table-layout: fixed; }
+  #modalCheckVeiculosParados .check-ppc-table th:nth-child(1), #modalCheckVeiculosParados .check-ppc-table td:nth-child(1) { width: 15%; }
+  #modalCheckVeiculosParados .check-ppc-table th:nth-child(2), #modalCheckVeiculosParados .check-ppc-table td:nth-child(2) { width: 12%; }
+  #modalCheckVeiculosParados .check-ppc-table th:nth-child(3), #modalCheckVeiculosParados .check-ppc-table td:nth-child(3) { width: 15%; }
+  #modalCheckVeiculosParados .check-ppc-table th:nth-child(4), #modalCheckVeiculosParados .check-ppc-table td:nth-child(4) { width: 9%; }
+  #modalCheckVeiculosParados .check-ppc-table th:nth-child(5), #modalCheckVeiculosParados .check-ppc-table td:nth-child(5) { width: 17%; }
+  #modalCheckVeiculosParados .check-ppc-table th:nth-child(6), #modalCheckVeiculosParados .check-ppc-table td:nth-child(6) { width: 14%; }
+  #modalCheckVeiculosParados .check-ppc-table th:nth-child(7), #modalCheckVeiculosParados .check-ppc-table td:nth-child(7) { width: 18%; }
+  #modalCheckVeiculosParados .check-ppc-table th, #modalCheckVeiculosParados .check-ppc-table td { white-space: normal; overflow-wrap: anywhere; vertical-align: middle; }
+  #modalCheckVeiculosParados .check-ppc-action-btn { min-width: 0; width: 100%; padding: 8px 6px; font-size: 9px; line-height: 1.2; white-space: normal; }
+  #modalCheckVeiculosParados .check-ppc-observation { width: 100%; min-width: 0; box-sizing: border-box; }
+  @media (max-width: 800px) { #modalCheckVeiculosParados .check-ppc-modal-container { width: 98%; } #modalCheckVeiculosParados .check-ppc-table { min-width: 1050px; } }
 
   /* Ajuste exclusivo das larguras da tabela do CHECK - KM/L */
   #modalCheckKml .check-ppc-modal-container { width: 96%; max-width: 1500px; }
@@ -4971,6 +4936,49 @@ sem os tons escuros atuais.
       body.tv-mode .collaborator-main-info {
         grid-template-columns: 118px minmax(0, 1fr) !important;
       }
+
+  /* Ajuste compacto das tabelas Abastecimento/Cliente e KM/L com 4 colunas do coordenador. */
+  #modalCheckAbsCliente .check-ppc-modal-container,
+  #modalCheckKml .check-ppc-modal-container { width: 98vw !important; max-width: 1840px !important; }
+  #modalCheckAbsCliente .check-ppc-table,
+  #modalCheckKml .check-kml-summary-wrap > .check-ppc-table { width: 100% !important; min-width: 1540px !important; max-width: none; table-layout: fixed !important; border-collapse: collapse; }
+  #modalCheckAbsCliente .check-ppc-table thead,
+  #modalCheckKml .check-kml-summary-wrap > .check-ppc-table thead { height: auto !important; }
+  #modalCheckAbsCliente .check-ppc-table thead tr,
+  #modalCheckKml .check-kml-summary-wrap > .check-ppc-table thead tr { height: auto !important; min-height: 0 !important; }
+  #modalCheckAbsCliente .check-ppc-table thead th,
+  #modalCheckKml .check-kml-summary-wrap > .check-ppc-table thead th { height: auto !important; min-height: 0 !important; padding: 10px 7px !important; line-height: 1.2 !important; vertical-align: middle !important; white-space: normal !important; overflow-wrap: anywhere; font-size: 10px !important; }
+  #modalCheckAbsCliente .check-ppc-table tbody tr,
+  #modalCheckKml .check-kml-summary-wrap > .check-ppc-table tbody tr { height: auto !important; min-height: 0 !important; }
+  #modalCheckAbsCliente .check-ppc-table tbody td,
+  #modalCheckKml .check-kml-summary-wrap > .check-ppc-table tbody td { height: auto !important; min-height: 0 !important; padding: 8px 7px !important; line-height: 1.25 !important; vertical-align: middle !important; white-space: normal !important; overflow-wrap: anywhere; }
+  #modalCheckAbsCliente .check-ppc-table th:nth-child(1), #modalCheckAbsCliente .check-ppc-table td:nth-child(1) { width: 16% !important; }
+  #modalCheckAbsCliente .check-ppc-table th:nth-child(2), #modalCheckAbsCliente .check-ppc-table td:nth-child(2) { width: 6% !important; }
+  #modalCheckAbsCliente .check-ppc-table th:nth-child(3), #modalCheckAbsCliente .check-ppc-table td:nth-child(3) { width: 7% !important; }
+  #modalCheckAbsCliente .check-ppc-table th:nth-child(4), #modalCheckAbsCliente .check-ppc-table td:nth-child(4) { width: 8% !important; }
+  #modalCheckAbsCliente .check-ppc-table th:nth-child(5), #modalCheckAbsCliente .check-ppc-table td:nth-child(5) { width: 8% !important; }
+  #modalCheckAbsCliente .check-ppc-table th:nth-child(6), #modalCheckAbsCliente .check-ppc-table td:nth-child(6) { width: 11% !important; }
+  #modalCheckAbsCliente .check-ppc-table th:nth-child(7), #modalCheckAbsCliente .check-ppc-table td:nth-child(7) { width: 9% !important; }
+  #modalCheckAbsCliente .check-ppc-table th:nth-child(8), #modalCheckAbsCliente .check-ppc-table td:nth-child(8) { width: 10% !important; }
+  #modalCheckAbsCliente .check-ppc-table th:nth-child(9), #modalCheckAbsCliente .check-ppc-table td:nth-child(9) { width: 9% !important; }
+  #modalCheckAbsCliente .check-ppc-table th:nth-child(10), #modalCheckAbsCliente .check-ppc-table td:nth-child(10) { width: 9% !important; }
+  #modalCheckAbsCliente .check-ppc-table th:nth-child(11), #modalCheckAbsCliente .check-ppc-table td:nth-child(11), #modalCheckAbsCliente .check-ppc-table th:nth-child(12), #modalCheckAbsCliente .check-ppc-table td:nth-child(12) { width: 8.5% !important; }
+  #modalCheckKml .check-kml-summary-wrap > .check-ppc-table th:nth-child(1), #modalCheckKml .check-kml-summary-wrap > .check-ppc-table td:nth-child(1) { width: 15% !important; }
+  #modalCheckKml .check-kml-summary-wrap > .check-ppc-table th:nth-child(2), #modalCheckKml .check-kml-summary-wrap > .check-ppc-table td:nth-child(2), #modalCheckKml .check-kml-summary-wrap > .check-ppc-table th:nth-child(3), #modalCheckKml .check-kml-summary-wrap > .check-ppc-table td:nth-child(3), #modalCheckKml .check-kml-summary-wrap > .check-ppc-table th:nth-child(4), #modalCheckKml .check-kml-summary-wrap > .check-ppc-table td:nth-child(4) { width: 6% !important; }
+  #modalCheckKml .check-kml-summary-wrap > .check-ppc-table th:nth-child(5), #modalCheckKml .check-kml-summary-wrap > .check-ppc-table td:nth-child(5) { width: 12% !important; }
+  #modalCheckKml .check-kml-summary-wrap > .check-ppc-table th:nth-child(6), #modalCheckKml .check-kml-summary-wrap > .check-ppc-table td:nth-child(6) { width: 9% !important; }
+  #modalCheckKml .check-kml-summary-wrap > .check-ppc-table th:nth-child(7), #modalCheckKml .check-kml-summary-wrap > .check-ppc-table td:nth-child(7) { width: 10% !important; }
+  #modalCheckKml .check-kml-summary-wrap > .check-ppc-table th:nth-child(8), #modalCheckKml .check-kml-summary-wrap > .check-ppc-table td:nth-child(8) { width: 9% !important; }
+  #modalCheckKml .check-kml-summary-wrap > .check-ppc-table th:nth-child(9), #modalCheckKml .check-kml-summary-wrap > .check-ppc-table td:nth-child(9) { width: 9% !important; }
+  #modalCheckKml .check-kml-summary-wrap > .check-ppc-table th:nth-child(10), #modalCheckKml .check-kml-summary-wrap > .check-ppc-table td:nth-child(10), #modalCheckKml .check-kml-summary-wrap > .check-ppc-table th:nth-child(11), #modalCheckKml .check-kml-summary-wrap > .check-ppc-table td:nth-child(11) { width: 9% !important; }
+  #modalCheckAbsCliente .check-ppc-observation, #modalCheckKml .check-kml-summary-wrap .check-ppc-observation { width: 100% !important; min-width: 0 !important; box-sizing: border-box; min-height: 30px; padding: 5px 6px; font-size: 10px; }
+  #modalCheckAbsCliente .check-ppc-action-btn, #modalCheckKml .check-kml-summary-wrap .check-ppc-action-btn { width: 100% !important; min-width: 0 !important; padding: 7px 5px; font-size: 9px; line-height: 1.15; white-space: normal; }
+  .check-status-pendente-supervisor { display: inline-flex; align-items: center; justify-content: center; width: 100%; box-sizing: border-box; min-height: 30px; padding: 5px 7px; border: 1px solid #f7c96b; border-radius: 18px; background: #fff1cc; color: #8b5700; font-size: 9px; line-height: 1.2; text-align: center; white-space: normal; }
+  .check-coord-approve-btn, .check-coord-reject-btn { display: block; width: 100%; min-width: 0; border: 0; border-radius: 6px; padding: 8px 4px; color: #fff; font-size: 9px; line-height: 1.15; font-weight: 700; white-space: normal; opacity: .78; }
+  .check-coord-approve-btn { background: #198754; } .check-coord-reject-btn { background: #dc3545; }
+  .check-coord-observation { width: 100%; min-width: 0 !important; box-sizing: border-box; min-height: 30px; font-size: 10px; }
+  @media (max-width: 900px) { #modalCheckAbsCliente .check-ppc-table, #modalCheckKml .check-kml-summary-wrap > .check-ppc-table { min-width: 1450px !important; } }
+
 </style>
   
   <style id="instalados-efetivados-nova-tabela">
@@ -5135,7 +5143,8 @@ sem os tons escuros atuais.
   .check-ppc-modal-body { padding: 18px 24px 24px; max-height: 78vh; overflow: auto; }
   .check-ppc-premise { margin-bottom: 14px; padding: 11px 13px; border: 1px solid #f0d1c8; border-radius: 9px; background: #fff7f3; color: #8c321c; font-size: 12px; }
   body.dark-mode .check-ppc-premise { background: #342722; border-color: #6f4538; color: #ffc0a6; }
-  .check-ppc-table-wrap { width: 100%; overflow: auto; border: 1px solid var(--border-color); border-radius: 9px; }
+  .check-ppc-table { min-width: 1500px; }
+      .check-ppc-table-wrap { width: 100%; overflow: auto; border: 1px solid var(--border-color); border-radius: 9px; }
   .check-ppc-table { width: 100%; border-collapse: collapse; min-width: 1080px; table-layout: fixed; font-size: 12px; }
   .check-ppc-table thead th { position: sticky; top: 0; z-index: 1; padding: 12px 14px; background: #f4511e; color: #fff; text-align: left; font-weight: 800; white-space: nowrap; }
   .check-ppc-table tbody td { padding: 11px 14px; border-bottom: 1px solid var(--border-color); color: var(--text-main); vertical-align: middle; }
@@ -5523,13 +5532,6 @@ sem os tons escuros atuais.
             <tbody><tr id="historicoQuartilProducaoBody"></tr></tbody>
           </table>
         </div>
-
-<div class="colab-cities-container" id="containerCidadesColab">
-          <span class="colab-cities-label"><i class="fa-solid fa-map-location-dot"></i> CIDADES RESPONSÁVEIS:</span>
-          <div id="colabCidadesList" style="display: flex; flex-wrap: wrap; gap: 6px;">
-            <span class="city-chip">-</span>
-          </div>
-        </div>
       </section>
       <section>
         <div class="section-title-kpi section-title-kpi-destaque"><i class="fa-solid fa-chart-pie"></i> INDICADORES DE CERTIFICAÇÃO</div>
@@ -5792,7 +5794,7 @@ sem os tons escuros atuais.
     <div class="modal-overlay" id="modalCheckDropIat" onclick="fecharModalCheckDropIat(event)">
       <div class="modal-container check-ppc-modal-container" onclick="event.stopPropagation()">
         <div class="modal-header"><div class="modal-title-area"><div class="modal-icon-box"><i class="fa-solid fa-network-wired"></i></div><div class="modal-title-text"><h3>CHECK — DROP IAT</h3><p class="check-ppc-modal-premise">Premissa: Colaboradores que realizaram a baixa de mais de 600 metros de CABO DROP em serviços de instalação ou reparo.</p></div></div><button class="modal-close-btn" type="button" onclick="fecharModalCheckDropIat()" aria-label="Fechar check"><i class="fa-solid fa-xmark"></i></button></div>
-        <div class="check-ppc-modal-body"><div class="check-ppc-table-wrap"><table class="check-ppc-table" aria-label="Registros do Check Drop IAT"><thead><tr><th>COLABORADOR</th><th>REVAN CLIENTE ID</th><th>QUANTIDADE (METROS)</th><th>TIPO DE SERVIÇO</th><th>OBSERVAÇÃO</th><th>CHECK</th></tr></thead><tbody id="checkDropIatTableBody"><tr><td colspan="6" class="check-ppc-empty">Carregando registros...</td></tr></tbody></table></div><div class="check-ppc-modal-footer"><span id="checkDropIatModalTotal">0 registros encontrados</span></div></div>
+        <div class="check-ppc-modal-body"><div class="check-ppc-table-wrap"><table class="check-ppc-table" aria-label="Registros do Check Drop IAT"><thead><tr><th>COLABORADOR</th><th>REVAN CLIENTE ID</th><th>QUANTIDADE</th><th>OBSERVAÇÃO</th><th>CHECK</th><th>STATUS DO CHECK</th><th>OBSERVAÇÃO COORDENADOR</th><th>APROVAÇÃO COORDENADOR</th><th>REPROVAÇÃO COORDENADOR</th></tr></thead><tbody id="checkDropIatTableBody"><tr><td colspan="8" class="check-ppc-empty">Carregando registros...</td></tr></tbody></table></div><div class="check-ppc-modal-footer"><span id="checkDropIatModalTotal">0 registros encontrados</span></div></div>
       </div>
     </div>
 
@@ -5961,7 +5963,7 @@ sem os tons escuros atuais.
             </div>
             <div class="kpi-progress-container"><div class="kpi-progress-bar bar-success" id="barDropIat" style="width: 100%;"></div></div>
           </div>
-          <div class="check-ppc-card" id="checkDropIatCard" role="button" tabindex="0" aria-label="Abrir Check - Drop IAT" onclick="abrirModalCheckDropIat()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirModalCheckDropIat();}">
+          <div class="check-ppc-card" id="checkDropIatCard" role="button" tabindex="0" aria-label="Abrir Check - Drop IAT" onclick="event.preventDefault();event.stopPropagation();abrirDropIatSafely()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();abrirDropIatSafely();}">
             <div class="check-ppc-card-top"><span class="check-ppc-icon"><i class="fa-solid fa-network-wired"></i></span><div class="check-ppc-heading"><strong>Check - Drop IAT</strong></div><span class="check-ppc-count-badge" id="checkDropIatTotal">0</span><i class="fa-solid fa-chevron-right check-ppc-chevron"></i></div>
             <div class="check-ppc-card-bottom"><span class="check-ppc-count-block"><span id="checkDropIatCountLabel">Checks pendentes</span></span><span class="check-ppc-status" id="checkDropIatStatus">Pendentes</span></div>
             <span class="check-ppc-link" id="checkDropIatLinkText">Clique para consultar os registros →</span>
@@ -6156,8 +6158,8 @@ sem os tons escuros atuais.
         <div class="check-ppc-modal-body">
           <div class="check-ppc-table-wrap">
             <table class="check-ppc-table" aria-label="Colaboradores pendentes no check de Ponto por Cabeça">
-              <thead><tr><th>FUNCIONÁRIO</th><th>DIAS DE EMPRESA</th><th>PONTUAÇÃO</th><th>OBSERVAÇÃO</th><th>CHECK</th></tr></thead>
-              <tbody id="checkPpcTableBody"><tr><td colspan="5" class="check-ppc-empty">Carregando colaboradores...</td></tr></tbody>
+              <thead><tr><th>FUNCIONÁRIO</th><th>DIAS DE EMPRESA</th><th>PONTUAÇÃO</th><th>OBSERVAÇÃO DO SUPERVISOR</th><th>CHECK DO SUPERVISOR</th><th>STATUS DO CHECK</th><th>OBSERVAÇÃO COORDENADOR</th><th>APROVAÇÃO COORDENADOR</th><th>REPROVAÇÃO COORDENADOR</th></tr></thead>
+              <tbody id="checkPpcTableBody"><tr><td colspan="9" class="check-ppc-empty">Carregando colaboradores...</td></tr></tbody>
             </table>
           </div>
           <div class="check-ppc-modal-footer">
@@ -6184,8 +6186,8 @@ sem os tons escuros atuais.
           <div class="check-ppc-premise"><strong>Premissas:</strong><br>(1) Colaboradores que atenderam mais de 50 clientes e não possuem veículo associado no CRUD;<br>(2) Colaboradores que consumiram mais do que o target disponível.</div>
           <div class="check-ppc-table-wrap">
             <table class="check-ppc-table" id="checkAbsClienteTable">
-              <thead><tr><th>FUNCIONÁRIO</th><th>CLIENTES</th><th>PLACA</th><th>R$ CONSUMIDO</th><th>TARGET</th><th>MOTIVO DO CHECK</th><th>OBSERVAÇÃO</th><th>CHECK</th></tr></thead>
-              <tbody id="checkAbsClienteTableBody"><tr><td colspan="8" class="check-ppc-empty">Carregando colaboradores...</td></tr></tbody>
+              <thead><tr><th>FUNCIONÁRIO</th><th>CLIENTES</th><th>PLACA</th><th>R$ CONSUMIDO</th><th>TARGET</th><th>MOTIVO DO CHECK</th><th>OBSERVAÇÃO DO SUPERVISOR</th><th>CHECK DO SUPERVISOR</th><th>STATUS DO CHECK</th><th>OBSERVAÇÃO COORDENADOR</th><th>APROVAÇÃO COORDENADOR</th><th>REPROVAÇÃO COORDENADOR</th></tr></thead>
+              <tbody id="checkAbsClienteTableBody"><tr><td colspan="12" class="check-ppc-empty">Carregando colaboradores...</td></tr></tbody>
             </table>
           </div>
           <div class="check-ppc-modal-footer"><span id="checkAbsClienteModalTotal">0 colaboradores encontrados</span></div>
@@ -6200,7 +6202,7 @@ sem os tons escuros atuais.
             <div class="modal-icon-box"><i class="fa-solid fa-gas-pump"></i></div>
             <div class="modal-title-text">
               <h3>CHECK - KM/L | ANÁLISE DE ABASTECIMENTO</h3>
-              <p class="check-ppc-modal-premise">Duas verificações: consumo KM/L fora dos limites e três ou mais abastecimentos consecutivos com a mesma litragem exata.</p>
+              <p class="check-ppc-modal-premise">Três verificações: consumo KM/L fora dos limites, três ou mais abastecimentos consecutivos com a mesma litragem exata e veículo parado há mais de 30 dias.</p>
             </div>
           </div>
           <button class="modal-close-btn" type="button" onclick="fecharModalCheckKml()" aria-label="Fechar check"><i class="fa-solid fa-xmark"></i></button>
@@ -6213,8 +6215,8 @@ sem os tons escuros atuais.
           </div>
           <div class="check-ppc-table-wrap check-kml-summary-wrap">
             <table class="check-ppc-table" aria-label="Colaboradores pendentes no check Turn KM por Litro">
-              <thead><tr><th>FUNCIONÁRIO</th><th>KM</th><th>LITROS</th><th>KM/L</th><th>MOTIVO DO CHECK</th><th>OBSERVAÇÃO</th><th>CHECK</th></tr></thead>
-              <tbody id="checkKmlTableBody"><tr><td colspan="6" class="check-ppc-empty">Carregando colaboradores...</td></tr></tbody>
+              <thead><tr><th>FUNCIONÁRIO</th><th>KM</th><th>LITROS</th><th>KM/L</th><th>MOTIVO DO CHECK</th><th>OBSERVAÇÃO DO SUPERVISOR</th><th>CHECK DO SUPERVISOR</th><th>STATUS DO CHECK</th><th>OBSERVAÇÃO COORDENADOR</th><th>APROVAÇÃO COORDENADOR</th><th>REPROVAÇÃO COORDENADOR</th></tr></thead>
+              <tbody id="checkKmlTableBody"><tr><td colspan="11" class="check-ppc-empty">Carregando colaboradores...</td></tr></tbody>
             </table>
           </div>
           <div class="check-ppc-premise check-kml-history-note"><strong>Analítico da litragem repetida:</strong> histórico de abastecimentos dos colaboradores sinalizados pela segunda premissa.</div>
@@ -6224,7 +6226,14 @@ sem os tons escuros atuais.
               <tbody id="checkLitragemRepetidaTableBody"><tr><td colspan="6" class="check-ppc-empty">Carregando histórico de abastecimentos...</td></tr></tbody>
             </table>
           </div>
-          <div class="check-ppc-modal-footer"><span id="checkKmlModalTotal">0 colaboradores encontrados</span><span id="checkLitragemRepetidaModalTotal">Histórico de litragem repetida</span></div>
+          <div class="check-ppc-premise check-kml-history-note"><strong>Veículos parados:</strong> veículos com mais de 30 dias parados, conforme a aba VEICULOS PARADOS. O responsável é identificado pela coluna NOME da aba VEICULOS PARADOS; a lista respeita o filtro principal.</div>
+          <div class="check-ppc-table-wrap check-kml-history-wrap">
+            <table class="check-ppc-table" id="checkVeiculosParadosTable">
+              <thead><tr><th>DATA DA TRANSAÇÃO</th><th>PLACA DO VEÍCULO</th><th>FAMÍLIA DO VEÍCULO</th><th>DIAS SEM ABASTECER</th></tr></thead>
+              <tbody id="checkVeiculosParadosTableBody"><tr><td colspan="4" class="check-ppc-empty">Carregando veículos parados...</td></tr></tbody>
+            </table>
+          </div>
+          <div class="check-ppc-modal-footer"><span id="checkKmlModalTotal">0 colaboradores encontrados</span><span id="checkLitragemRepetidaModalTotal">Histórico de litragem repetida</span><span id="checkVeiculosParadosModalTotal">0 veículos encontrados</span></div>
         </div>
       </div>
     </div>
@@ -6272,8 +6281,8 @@ sem os tons escuros atuais.
           <div class="check-ppc-premise" id="checkBhHePtPremise"><strong>Premissas:</strong> (1) Hora extra do mês vigente maior que zero E pontuação do mesmo mês igual a zero; (2) hora extra acumulada no mês vigente superior a 20 horas.</div>
           <div class="check-ppc-table-wrap">
             <table class="check-ppc-table" id="checkBhHePtTable">
-              <thead><tr><th>COLABORADOR</th><th id="checkBhHePtPtHeader">PT DO MÊS</th><th id="checkBhHePtHeHeader">HORA EXTRA DO MÊS</th><th>MOTIVO DO CHECK</th><th>OBSERVAÇÃO</th><th>CHECK</th></tr></thead>
-              <tbody id="checkBhHePtTableBody"><tr><td colspan="6" class="check-ppc-empty">Carregando colaboradores...</td></tr></tbody>
+              <thead><tr><th>COLABORADOR</th><th id="checkBhHePtPtHeader">PT DO MÊS</th><th id="checkBhHePtHeHeader">HORA EXTRA DO MÊS</th><th>MOTIVO DO CHECK</th><th>OBSERVAÇÃO DO SUPERVISOR</th><th>CHECK DO SUPERVISOR</th><th>STATUS DO CHECK</th><th>OBSERVAÇÃO COORDENADOR</th><th>APROVAÇÃO COORDENADOR</th><th>REPROVAÇÃO COORDENADOR</th></tr></thead>
+              <tbody id="checkBhHePtTableBody"><tr><td colspan="10" class="check-ppc-empty">Carregando colaboradores...</td></tr></tbody>
             </table>
           </div>
           <div class="check-ppc-modal-footer"><span id="checkBhHePtModalTotal">0 colaboradores encontrados</span></div>
@@ -8590,7 +8599,7 @@ sem os tons escuros atuais.
       </div>
     </div>
     <script>
-      var allData = [], fotosRaioX = [], pccData = [], tamData = [], abstData = [], kmlData = [], analiticoKmlData = [], acidentesData = [], inspecaoData = [], tratarPtData = [], bhHeData = [], gpsPontoData = [], recorrenciaData = [], materialData = [], analiticoMaterialData = [], indicadoresCidadesData = [], improdutivaData = [], instaladosEfetivadosData = [], quartil4Data = [], rankingData = { multiskill: [], recolhimento: [], totais: { multiskill: 0, recolhimento: 0 } }, selects = {};
+      var allData = [], fotosRaioX = [], pccData = [], tamData = [], abstData = [], kmlData = [], analiticoKmlData = [], acidentesData = [], inspecaoData = [], tratarPtData = [], bhHeData = [], gpsPontoData = [], recorrenciaData = [], materialData = [], analiticoMaterialData = [], veiculosParadosData = [], indicadoresCidadesData = [], improdutivaData = [], instaladosEfetivadosData = [], quartil4Data = [], rankingData = { multiskill: [], recolhimento: [], totais: { multiskill: 0, recolhimento: 0 } }, selects = {};
       var meuGrafico = null, meuGraficoTam = null, meuGraficoAbs = null, meuGraficoKml = null, meuGraficoAcidentes = null, meuGraficoInspecao = null, meuGraficoTratarPonto = null, meuGraficoBhHe = null, meuGraficoGpsPonto = null, meuGraficoRecorrencia = null, meuGraficoConectorInst = null, meuGraficoConectorRep = null;
       var meuGraficoDropIat = null, meuGraficoIndiceVisitas = null, meuGraficoSlaIat = null, meuGraficoInstEfet = null, meuGraficoSafra = null, meuGraficoChurnRate = null, meuGraficoIsrPastor = null, meuGraficoIndiceRetencao = null, meuGraficoCertificacao = null, meuGraficoCertificacaoCidades = null, meuGraficoRegularizacao15m = null, meuGraficoEquipes4Quartil = null;
       var meuGraficoAtestado12m = null, meuGraficoImprodutivaIat = null, meuGraficoBacklogReparo = null, meuGraficoBacklogInstalacao = null, meuGraficoBacklogIat = null, meuGraficoSafraFtth = null, meuGraficoSafraFwa = null;
@@ -9808,7 +9817,7 @@ sem os tons escuros atuais.
               allData = parsed.raiox || []; fotosRaioX = parsed.fotosRaioX || []; pccData = parsed.pcc || []; tamData = parsed.tam || []; abstData = parsed.abst || [];
               kmlData = parsed.kml || []; analiticoKmlData = parsed.analiticoKml || []; acidentesData = parsed.acidentes || []; inspecaoData = parsed.inspecao || [];
               tratarPtData = parsed.tratarPonto || []; bhHeData = parsed.bhHe || []; gpsPontoData = parsed.gpsPonto || []; analiticoGpsPontoData = parsed.analiticoGpsPonto || [];
-              recorrenciaData = parsed.recorrencia || []; materialData = parsed.material || []; analiticoMaterialData = parsed.analiticoMaterial || [];
+              recorrenciaData = parsed.recorrencia || []; materialData = parsed.material || []; analiticoMaterialData = parsed.analiticoMaterial || []; veiculosParadosData = parsed.veiculosParados || [];
               indicadoresCidadesData = parsed.indicadoresCidades || [];
               improdutivaData = parsed.improdutiva || [];
               instaladosEfetivadosData = parsed.instaladosEfetivados || [];
@@ -9828,6 +9837,7 @@ sem os tons escuros atuais.
               atualizarCheckGpsPontoCard();
               atualizarCheckConectorInstalacaoCard();
               atualizarCheckDropIatCard();
+              atualizarResumoChecksSupervisor();
               atualizarResumoChecksSupervisor();
               
               if (document.body.classList.contains('tv-mode')) sincronizarApresentacaoTvComFiltros();
@@ -10075,11 +10085,10 @@ sem os tons escuros atuais.
           });
         }
 
-        // O filtro principal de colaborador/supervisor não deve ser apagado pela cascata.
-        // Se a lista de nomes for reduzida por mês/setor/quartil, o TomSelect pode limpar
-        // a seleção atual; o perfil continua mostrando o colaborador antigo, enquanto KPIs
-        // e checks passam a usar o contexto geral. Mantemos todos os nomes disponíveis.
-        setDropdownOptions('filterNome', getUniqueValues(allData, 'NOME', false));
+        // Lista de colaboradores/supervisores em cascata: ao selecionar um coordenador,
+        // mostrar somente os nomes vinculados a ele, respeitando também mês, gerente,
+        // setor e quartil selecionados. O filtro NOME é ignorado ao construir suas opções.
+        setDropdownOptions('filterNome', getUniqueValues(filtrarPor('NOME'), 'NOME', false));
         setDropdownOptions('filterCoordenador', getUniqueValues(filtrarPor('COORDENADOR DE CAMPO'), 'COORDENADOR DE CAMPO', false));
         setDropdownOptions('filterGerente', getUniqueValues(filtrarPor('GERENTE DE CAMPO'), 'GERENTE DE CAMPO', false));
         setDropdownOptions('filterSetor', getUniqueValues(filtrarPor('SETOR'), 'SETOR', false));
@@ -11033,26 +11042,6 @@ sem os tons escuros atuais.
         var strQProd = (valQProd !== undefined && valQProd !== null && String(valQProd).trim() !== '') ? String(valQProd).trim() : '-';
         var valQRaioX = getValueSafe(dataAtual, ['QUARTIL RAIO X', 'QUARTIL RAIOX', 'QUARTIL']);
         var strQRaioX = (valQRaioX !== undefined && valQRaioX !== null && String(valQRaioX).trim() !== '') ? String(valQRaioX).trim() : '-';
-        var rawCidades = getValueSafe(dataAtual, ['CIDADES', 'CIDADES DE ATUAÇÃO', 'CIDADES ATUAÇÃO']) || getValueSafe(dataAtual, ['CIDADE']);
-        var listEl = document.getElementById('colabCidadesList');
-        
-        if (listEl) {
-          listEl.innerHTML = '';
-          if (rawCidades && String(rawCidades).trim() !== '' && String(rawCidades).trim() !== '-') {
-            var listaCidades = String(rawCidades).split(/[,;]+/);
-            listaCidades.forEach(function(cid) {
-              var nomeCid = cid.trim();
-              if (nomeCid !== '') {
-                var chip = document.createElement('span');
-                chip.className = 'city-chip';
-                chip.innerHTML = '<i class="fa-solid fa-location-dot"></i> ' + nomeCid.toUpperCase();
-                listEl.appendChild(chip);
-              }
-            });
-          } else {
-            listEl.innerHTML = '<span class="city-chip">-</span>';
-          }
-        }
 
         renderHistoricoQuartilProducao(selectedNome);
         renderHistoricoQuartilRaioX(selectedNome);
@@ -11198,8 +11187,6 @@ sem os tons escuros atuais.
         if (elRankingColab) elRankingColab.textContent = '-';
         var elCertificacaoColab = document.getElementById('colabCertificacao');
         if (elCertificacaoColab) elCertificacaoColab.textContent = '-';
-        var elCidadesColab = document.getElementById('colabCidadesList');
-        if (elCidadesColab) elCidadesColab.innerHTML = '<span class="city-chip">-</span>';
         renderHistoricoQuartilProducao(null);
         renderHistoricoQuartilRaioX(null);
         
@@ -11346,22 +11333,85 @@ sem os tons escuros atuais.
         if (label) label.textContent = dados.length === 1 ? '1 registro pendente' : dados.length + ' registros pendentes';
         if (link) link.textContent = dados.length ? 'Clique para consultar os registros →' : 'Nenhum registro atende à regra →';
       }
-      function abrirModalCheckDropIat() { atualizarCheckDropIatCard();
-              atualizarResumoChecksSupervisor(); var modal = document.getElementById('modalCheckDropIat'); if (!modal) return; renderizarCheckDropIat(); modal.style.display = 'flex'; }
-      function fecharModalCheckDropIat(event) { if (event && event.target && event.currentTarget && event.target !== event.currentTarget) return; var modal = document.getElementById('modalCheckDropIat'); if (modal) modal.style.display = 'none'; }
+      function abrirModalCheckDropIat(event) {
+        if (event && typeof event.stopPropagation === 'function') event.stopPropagation();
+        var modal = document.getElementById('modalCheckDropIat');
+        if (!modal) { console.error('Não foi encontrado o modal #modalCheckDropIat.'); return; }
+        modal.style.setProperty('display', 'flex', 'important');
+        modal.style.visibility = 'visible';
+        modal.style.opacity = '1';
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+        try { renderizarCheckDropIat(); } catch (erroRender) {
+          console.error('Erro ao carregar o analítico do Check Drop IAT:', erroRender);
+          var tbody = document.getElementById('checkDropIatTableBody');
+          if (tbody) { tbody.innerHTML = ''; var tr = document.createElement('tr'); var td = document.createElement('td'); td.colSpan = 9; td.className = 'check-ppc-empty'; td.textContent = 'O modal abriu, mas ocorreu um erro ao carregar os registros. Confira os dados e tente novamente.'; tr.appendChild(td); tbody.appendChild(tr); }
+        }
+        try { atualizarCheckDropIatCard(); } catch (erroCard) { console.warn('Não foi possível atualizar o resumo do Check Drop IAT:', erroCard); }
+        try { atualizarResumoChecksSupervisor(); } catch (erroResumo) { console.warn('Não foi possível atualizar o resumo geral dos checks:', erroResumo); }
+      }
+      function fecharModalCheckDropIat(event) {
+        if (event && event.target && event.currentTarget && event.target !== event.currentTarget) return;
+        var modal = document.getElementById('modalCheckDropIat');
+        if (modal) { modal.style.display = 'none'; modal.setAttribute('aria-hidden', 'true'); }
+        document.body.classList.remove('modal-open');
+      }
       function renderizarCheckDropIat() {
-        var tbody = document.getElementById('checkDropIatTableBody'), total = document.getElementById('checkDropIatModalTotal'); if (!tbody) return;
-        var dados = obterChecksDropIatPendentes(); tbody.innerHTML = '';
-        if (!dados.length) { var tr0 = document.createElement('tr'), td0 = document.createElement('td'); td0.colSpan = 6; td0.className = 'check-ppc-empty'; td0.textContent = 'Nenhum registro atende à premissa para o filtro atual.'; tr0.appendChild(td0); tbody.appendChild(tr0); }
-        else dados.forEach(function(item) {
-          var tr = document.createElement('tr');
-          [item.colaborador, item.revanClienteId, item.quantidade, item.tipoServico].forEach(function(valor) { var td = document.createElement('td'); td.textContent = String(valor == null || valor === '' ? '—' : valor); tr.appendChild(td); });
-          var tdObs = document.createElement('td'), obs = document.createElement('textarea'); obs.className = 'check-ppc-observation'; obs.rows = 1; obs.maxLength = 500; obs.placeholder = 'Adicionar observação...'; obs.setAttribute('aria-label', 'Observação para ' + String(item.colaborador || 'colaborador')); tdObs.appendChild(obs); tr.appendChild(tdObs);
-          var tdAcao = document.createElement('td'); tdAcao.className = 'check-ppc-action-cell'; var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'check-ppc-action-btn'; btn.innerHTML = '<i class="fa-solid fa-check"></i> CIENTE E ENCAMINHAR AO COORDENADOR'; btn.title = 'Registrar ciência e encaminhamento';
-          btn.addEventListener('click', function() { alert('A interface está pronta, mas o registro da observação e o encaminhamento ao coordenador ainda precisam ser conectados ao Google Apps Script. Nenhuma informação foi salva ou enviada.'); }); tdAcao.appendChild(btn); tr.appendChild(tdAcao); tbody.appendChild(tr);
-        });
+        var tbody = document.getElementById('checkDropIatTableBody');
+        var total = document.getElementById('checkDropIatModalTotal');
+        if (!tbody) return;
+        var dados = obterChecksDropIatPendentes();
+        tbody.innerHTML = '';
+        if (!dados.length) {
+          var trVazio = document.createElement('tr');
+          var tdVazio = document.createElement('td');
+          tdVazio.colSpan = 9;
+          tdVazio.className = 'check-ppc-empty';
+          tdVazio.textContent = 'Nenhum registro atende à premissa para o filtro atual.';
+          trVazio.appendChild(tdVazio);
+          tbody.appendChild(trVazio);
+        } else {
+          dados.forEach(function(item) {
+            var tr = document.createElement('tr');
+            [item.colaborador, item.revanClienteId, item.quantidade].forEach(function(valor) {
+              var td = document.createElement('td');
+              td.textContent = String(valor == null || valor === '' ? '—' : valor);
+              tr.appendChild(td);
+            });
+
+            var tdObs = document.createElement('td');
+            var obs = document.createElement('textarea');
+            obs.className = 'check-ppc-observation';
+            obs.rows = 1;
+            obs.maxLength = 500;
+            obs.placeholder = 'Adicionar observação...';
+            obs.setAttribute('aria-label', 'Observação para ' + String(item.colaborador || 'colaborador'));
+            tdObs.appendChild(obs);
+            tr.appendChild(tdObs);
+
+            var tdAcao = document.createElement('td');
+            tdAcao.className = 'check-ppc-action-cell';
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'check-ppc-action-btn';
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> CIENTE E ENCAMINHAR AO COORDENADOR';
+            btn.title = 'Registrar ciência e encaminhamento';
+            btn.addEventListener('click', function() {
+              alert('A interface do Check Drop IAT está pronta, mas o salvamento da observação e o encaminhamento ainda precisam ser conectados ao Google Apps Script. Nenhuma informação foi salva ou enviada.');
+            });
+            tdAcao.appendChild(btn);
+            tr.appendChild(tdAcao);
+
+            // Mesma estrutura visual das colunas de status e coordenador usadas nos outros checks.
+            adicionarColunasCoordenadorVisual_(tr);
+            tbody.appendChild(tr);
+          });
+        }
         if (total) total.textContent = dados.length + (dados.length === 1 ? ' registro encontrado' : ' registros encontrados');
       }
+      // O handler global de abertura usa esta referência para renderizar a tabela após abrir o modal.
+      window.renderizarCheckDropIat = renderizarCheckDropIat;
+
 
       // CHECK GPS + PONTO: usa a aba ANALITICO GPS PONTO; campos vazios de ÚLTIMA BATIDA são exibidos como SEM BATIDA.
       function obterChecksGpsPontoPendentes() {
@@ -11411,7 +11461,7 @@ sem os tons escuros atuais.
         var tbody = document.getElementById('checkGpsPontoTableBody'), totalEl = document.getElementById('checkGpsPontoModalTotal');
         if (!tbody) return;
         var dados = obterChecksGpsPontoPendentes(); tbody.innerHTML = '';
-        if (!dados.length) { var tr0 = document.createElement('tr'), td0 = document.createElement('td'); td0.colSpan = 7; td0.className = 'check-ppc-empty'; td0.textContent = 'Nenhum registro sem última batida para o filtro atual.'; tr0.appendChild(td0); tbody.appendChild(tr0); }
+        if (!dados.length) { var tr0 = document.createElement('tr'), td0 = document.createElement('td'); td0.colSpan = 11; td0.className = 'check-ppc-empty'; td0.textContent = 'Nenhum registro sem última batida para o filtro atual.'; tr0.appendChild(td0); tbody.appendChild(tr0); }
         else dados.forEach(function(linha) {
           var funcionario = getValueSafe(linha, ['COLABORADOR', 'FUNCIONÁRIO', 'FUNCIONARIO']);
           var batida = getValueSafe(linha, ['ÚLTIMA BATIDA', 'ULTIMA BATIDA', 'ULTIMA_BATIDA']);
@@ -11471,7 +11521,7 @@ sem os tons escuros atuais.
 
       function atualizarResumoChecksSupervisor() {
         // Soma os contadores que já são calculados pelas regras individuais, após os filtros ativos.
-        var ids = ['checkPpcTotal','checkAbsClienteTotal','checkKmlTotal','checkTratarPontoTotal','checkBhHePtTotal','checkGpsPontoTotal','checkConectorInstalacaoTotal','checkDropIatTotal'];
+        var ids = ['checkPpcTotal','checkAbsClienteTotal','checkKmlTotal','checkVeiculosParadosTotal','checkTratarPontoTotal','checkBhHePtTotal','checkGpsPontoTotal','checkConectorInstalacaoTotal','checkDropIatTotal'];
         var total = 0;
         ids.forEach(function(id) {
           var el = document.getElementById(id);
@@ -11536,7 +11586,7 @@ sem os tons escuros atuais.
         if (dados.length === 0) {
           var trVazio = document.createElement('tr');
           var tdVazio = document.createElement('td');
-          tdVazio.colSpan = 5;
+          tdVazio.colSpan = 9;
           tdVazio.className = 'check-ppc-empty';
           tdVazio.textContent = 'Nenhum colaborador atende à premissa para o filtro atual.';
           trVazio.appendChild(tdVazio);
@@ -11576,6 +11626,60 @@ sem os tons escuros atuais.
             });
             tdAcao.appendChild(btn);
             tr.appendChild(tdAcao);
+
+            // Status inicial visual do fluxo PPC; persistência será conectada ao Apps Script na próxima etapa.
+            var tdStatusCheck = document.createElement('td');
+            tdStatusCheck.className = 'ppc-status-cell';
+            var statusBadge = document.createElement('span');
+            statusBadge.className = 'ppc-status-badge ppc-status-supervisor';
+            statusBadge.textContent = 'Pendente de análise do supervisor';
+            tdStatusCheck.appendChild(statusBadge);
+            tr.appendChild(tdStatusCheck);
+
+            // Colunas de visualização do coordenador: não gravam dados nesta etapa de teste.
+            var tdCoordObs = document.createElement('td');
+            tdCoordObs.className = 'coord-observation-cell';
+            var obsCoord = document.createElement('textarea');
+            obsCoord.className = 'coord-observation';
+            obsCoord.rows = 2;
+            obsCoord.maxLength = 1000;
+            obsCoord.placeholder = 'Digite a observação do coordenador...';
+            obsCoord.disabled = false;
+            obsCoord.setAttribute('aria-label', 'Observação do coordenador para ' + String(funcionario || 'colaborador'));
+            obsCoord.title = 'Campo visual de teste: o texto não será salvo na planilha nesta versão.';
+            tdCoordObs.appendChild(obsCoord);
+            tr.appendChild(tdCoordObs);
+
+            var tdCoordAprovar = document.createElement('td');
+            tdCoordAprovar.className = 'coord-approval-cell';
+            var btnCoordAprovar = document.createElement('button');
+            btnCoordAprovar.type = 'button';
+            btnCoordAprovar.className = 'coord-demo-btn coord-demo-approve';
+            btnCoordAprovar.disabled = true;
+            btnCoordAprovar.textContent = '✓ APROVAR';
+            btnCoordAprovar.title = 'Protótipo visual. A permissão por e-mail e a gravação serão conectadas depois.';
+            tdCoordAprovar.appendChild(btnCoordAprovar);
+            var noteAprovar = document.createElement('span');
+            noteAprovar.className = 'coord-demo-note';
+            noteAprovar.textContent = '';
+            tdCoordAprovar.appendChild(noteAprovar);
+            tr.appendChild(tdCoordAprovar);
+
+            var tdCoordReprovar = document.createElement('td');
+            tdCoordReprovar.className = 'coord-rejection-cell';
+            var btnCoordReprovar = document.createElement('button');
+            btnCoordReprovar.type = 'button';
+            btnCoordReprovar.className = 'coord-demo-btn coord-demo-reject';
+            btnCoordReprovar.disabled = true;
+            btnCoordReprovar.textContent = '✕ REPROVAR';
+            btnCoordReprovar.title = 'Protótipo visual. A permissão por e-mail e a gravação serão conectadas depois.';
+            tdCoordReprovar.appendChild(btnCoordReprovar);
+            var noteReprovar = document.createElement('span');
+            noteReprovar.className = 'coord-demo-note';
+            noteReprovar.textContent = '';
+            tdCoordReprovar.appendChild(noteReprovar);
+            tr.appendChild(tdCoordReprovar);
+
             tbody.appendChild(tr);
           });
         }
@@ -11671,6 +11775,33 @@ sem os tons escuros atuais.
         var modal = document.getElementById('modalCheckAbsCliente');
         if (modal) modal.style.display = 'none';
       }
+      // Colunas padronizadas do coordenador para os modais de check. Nesta versão são visuais; gravação será ligada ao Apps Script na etapa funcional.
+      function adicionarColunasCoordenadorVisual_(tr) {
+        var tdStatus = document.createElement('td');
+        var status = document.createElement('span');
+        status.className = 'check-status-pendente-supervisor';
+        status.textContent = 'Pendente de análise do supervisor';
+        tdStatus.appendChild(status); tr.appendChild(tdStatus);
+
+        var tdObsCoord = document.createElement('td');
+        var obsCoord = document.createElement('textarea');
+        obsCoord.className = 'check-ppc-observation check-coord-observation';
+        obsCoord.rows = 1; obsCoord.maxLength = 500;
+        obsCoord.placeholder = 'Digite a observação do coordenador...';
+        obsCoord.disabled = true;
+        tdObsCoord.appendChild(obsCoord); tr.appendChild(tdObsCoord);
+
+        var tdAprovar = document.createElement('td');
+        var aprovar = document.createElement('button'); aprovar.type = 'button';
+        aprovar.className = 'check-coord-approve-btn'; aprovar.textContent = '✓ APROVAR'; aprovar.disabled = true;
+        tdAprovar.appendChild(aprovar); tr.appendChild(tdAprovar);
+
+        var tdReprovar = document.createElement('td');
+        var reprovar = document.createElement('button'); reprovar.type = 'button';
+        reprovar.className = 'check-coord-reject-btn'; reprovar.textContent = '✕ REPROVAR'; reprovar.disabled = true;
+        tdReprovar.appendChild(reprovar); tr.appendChild(tdReprovar);
+      }
+
       function renderizarCheckAbsCliente() {
         var tbody = document.getElementById('checkAbsClienteTableBody');
         var totalEl = document.getElementById('checkAbsClienteModalTotal');
@@ -11679,7 +11810,7 @@ sem os tons escuros atuais.
         tbody.innerHTML = '';
         if (!dados.length) {
           var vazio = document.createElement('tr'); var tdVazio = document.createElement('td');
-          tdVazio.colSpan = 8; tdVazio.className = 'check-ppc-empty'; tdVazio.textContent = 'Nenhum colaborador atende às premissas para o filtro atual.';
+          tdVazio.colSpan = 12; tdVazio.className = 'check-ppc-empty'; tdVazio.textContent = 'Nenhum colaborador atende às premissas para o filtro atual.';
           vazio.appendChild(tdVazio); tbody.appendChild(vazio);
         } else {
           dados.forEach(function(linha) {
@@ -11696,7 +11827,9 @@ sem os tons escuros atuais.
             btn.type = 'button'; btn.className = 'check-ppc-action-btn'; btn.innerHTML = '<i class="fa-solid fa-check"></i> CIENTE E ENCAMINHAR AO COORDENADOR';
             btn.title = 'Registrar ciência e encaminhar ao coordenador';
             btn.addEventListener('click', function() { alert('O botão está apenas visual nesta versão. Para registrar o encaminhamento no histórico e na base, ainda é necessário conectar esta ação ao Google Apps Script. Nenhum encaminhamento foi salvo.'); });
-            tdAcao.appendChild(btn); tr.appendChild(tdAcao); tbody.appendChild(tr);
+            tdAcao.appendChild(btn); tr.appendChild(tdAcao);
+            adicionarColunasCoordenadorVisual_(tr);
+            tbody.appendChild(tr);
           });
         }
         if (totalEl) totalEl.textContent = dados.length + (dados.length === 1 ? ' colaborador encontrado' : ' colaboradores encontrados');
@@ -11735,6 +11868,82 @@ sem os tons escuros atuais.
         });
       }
 
+      // CHECK VEÍCULOS PARADOS: usa a coluna NOME da aba VEICULOS PARADOS
+      // como responsável pelo registro e considera as variantes do cabeçalho de dias.
+      function obterChecksVeiculosParadosPendentes() {
+        var dados = Array.isArray(veiculosParadosData) ? veiculosParadosData.slice() : [];
+        var selecionados = obterNomeSelecionadoParaAnalitico();
+        var supervisores = Array.isArray(selecionados) ? selecionados : (selecionados ? [selecionados] : []);
+        supervisores = supervisores.map(function(nome) { return String(nome || '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim(); }).filter(function(nome) { return nome !== ''; });
+        var chavesDias = ['DVS ABS', 'D/S ABS', 'D S ABS', 'DIAS ABS', 'DIAS ABSOLUTOS', 'DIAS PARADO', 'DIAS PARADOS', 'DIAS DE PARADA'];
+        return dados.filter(function(linha) {
+          var diasRaw = getValueSafe(linha, chavesDias);
+          if (diasRaw === undefined || diasRaw === null || String(diasRaw).trim() === '') return false;
+          var dias = getNumeroLimpo(diasRaw);
+          if (!isFinite(dias) || dias <= 30) return false;
+          // Na aba mostrada, o cabeçalho da pessoa responsável é NOME (coluna E), não SUPERVISOR.
+          var supervisor = getValueSafe(linha, ['NOME', 'SUPERVISOR', 'NOME SUPERVISOR', 'RESPONSÁVEL', 'RESPONSAVEL']);
+          if (supervisores.length && !supervisores.some(function(nome) {
+            var a = String(nome || '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
+            var b = String(supervisor || '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
+            return comparaNomeFlexivel(a, b);
+          })) return false;
+          return true;
+        }).sort(function(a, b) {
+          return getNumeroLimpo(getValueSafe(b, chavesDias)) - getNumeroLimpo(getValueSafe(a, chavesDias));
+        });
+      }
+
+      function formatarDataVeiculoParado(valor) {
+        if (valor == null || valor === '') return '—';
+        if (valor instanceof Date && !isNaN(valor.getTime())) {
+          return String(valor.getDate()).padStart(2, '0') + '/' + String(valor.getMonth() + 1).padStart(2, '0') + '/' + valor.getFullYear();
+        }
+        var texto = String(valor).trim();
+        // Datas ISO ou numéricas já presentes nos dados.
+        var iso = texto.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:T.*)?$/);
+        if (iso) return iso[3].padStart(2, '0') + '/' + iso[2].padStart(2, '0') + '/' + iso[1];
+        var numerica = texto.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})$/);
+        if (numerica) return numerica[1].padStart(2, '0') + '/' + numerica[2].padStart(2, '0') + '/' + numerica[3];
+        // Ex.: "5 de jun. de 2026" ou "20 de mai. de 2026" (formato exibido na planilha).
+        var pt = texto.toLocaleLowerCase('pt-BR').match(/^(\d{1,2})\s+de\s+([a-zç]{3,})(?:\.)?\s+de\s+(\d{4})$/i);
+        if (pt) {
+          var meses = {jan:1,janeiro:1,fev:2,fevereiro:2,mar:3,março:3,marco:3,abr:4,abril:4,mai:5,maio:5,jun:6,junho:6,jul:7,julho:7,ago:8,agosto:8,set:9, setembro:9,out:10,outubro:10,nov:11,novembro:11,dez:12,dezembro:12};
+          var mesTxt = pt[2].replace(/\.$/, '');
+          var mes = meses[mesTxt] || meses[mesTxt.slice(0,3)];
+          if (mes) return pt[1].padStart(2, '0') + '/' + String(mes).padStart(2, '0') + '/' + pt[3];
+        }
+        // Se o valor não puder ser interpretado, preserva o texto original para não inventar uma data.
+        return texto;
+      }
+
+      function renderizarCheckVeiculosParados() {
+        var tbody = document.getElementById('checkVeiculosParadosTableBody');
+        var totalEl = document.getElementById('checkVeiculosParadosModalTotal');
+        if (!tbody) return;
+        var dados = obterChecksVeiculosParadosPendentes();
+        tbody.innerHTML = '';
+        if (!dados.length) {
+          var tr0 = document.createElement('tr'); var td0 = document.createElement('td');
+          td0.colSpan = 6; td0.className = 'check-ppc-empty';
+          td0.textContent = veiculosParadosData.length ? 'Nenhum veículo atende à premissa de mais de 30 dias para o supervisor selecionado.' : 'A aba VEICULOS PARADOS não foi carregada pelo GS.';
+          tr0.appendChild(td0); tbody.appendChild(tr0);
+        } else {
+          dados.forEach(function(linha) {
+            var data = formatarDataVeiculoParado(getValueSafe(linha, ['DATA TRANSACAO', 'DATA TRANSAÇÃO', 'DATA DA TRANSAÇÃO', 'DATA']));
+            var placa = getValueSafe(linha, ['PLACA VEÍCULO', 'PLACA VEICULO', 'PLACA DO VEÍCULO', 'PLACA DO VEICULO', 'PLACA']);
+            var familia = getValueSafe(linha, ['FAMILIA VEICULO', 'FAMÍLIA VEÍCULO', 'FAMÍLIA DO VEÍCULO', 'FAMILIA DO VEICULO', 'FAMILIA VEICULAR']);
+            var dias = getValueSafe(linha, ['DVS ABS', 'D/S ABS', 'D S ABS', 'DIAS ABS', 'DIAS ABSOLUTOS', 'DIAS PARADO', 'DIAS PARADOS', 'DIAS DE PARADA']);
+            var tr = document.createElement('tr');
+            [data, placa, familia, (dias == null || dias === '' ? '—' : (String(dias).trim().replace('.', ',') + ' dias'))].forEach(function(valor) {
+              var td = document.createElement('td'); td.textContent = String(valor == null || valor === '' ? '—' : valor); tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+        }
+        if (totalEl) totalEl.textContent = dados.length + (dados.length === 1 ? ' veículo encontrado' : ' veículos encontrados');
+      }
+
       function atualizarCheckKmlCard() {
         var totalEl = document.getElementById('checkKmlTotal');
         var cardEl = document.getElementById('checkKmlCard');
@@ -11757,7 +11966,16 @@ sem os tons escuros atuais.
           var chave = limparTexto(nome);
           if (chave) unicos[chave] = true;
         });
-        var total = Object.keys(unicos).length;
+        var totalBase = Object.keys(unicos).length;
+        var veiculos = obterChecksVeiculosParadosPendentes();
+        var veiculosUnicos = {};
+        veiculos.forEach(function(linha) {
+          var placa = String(getValueSafe(linha, ['PLACA VEÍCULO', 'PLACA VEICULO', 'PLACA DO VEÍCULO', 'PLACA DO VEICULO', 'PLACA']) || '').trim();
+          var data = String(getValueSafe(linha, ['DATA TRANSACAO', 'DATA TRANSAÇÃO', 'DATA DA TRANSAÇÃO', 'DATA']) || '').trim();
+          var chaveVeiculo = limparTexto(placa + '|' + data);
+          if (chaveVeiculo && chaveVeiculo !== '|') veiculosUnicos[chaveVeiculo] = true;
+        });
+        var total = totalBase + Object.keys(veiculosUnicos).length;
         totalEl.textContent = String(total);
         if (cardEl) {
           cardEl.classList.toggle('is-clear', total === 0);
@@ -11767,7 +11985,7 @@ sem os tons escuros atuais.
           statusEl.textContent = total > 0 ? (total === 1 ? 'Pendente' : 'Pendentes') : (repetidos.semBase ? 'Aguardando base' : 'Em dia');
           statusEl.classList.toggle('is-clear', total === 0 && !repetidos.semBase);
         }
-        if (labelEl) labelEl.textContent = total === 1 ? '1 colaborador sinalizado' : total + ' colaboradores sinalizados';
+        if (labelEl) labelEl.textContent = total === 1 ? '1 pendência sinalizada' : total + ' pendências sinalizadas';
         if (linkEl) linkEl.textContent = total > 0 ? 'Clique para consultar os colaboradores →' : (repetidos.semBase ? 'Base Analítico KM/L não conectada' : 'Clique para conferir a regra →');
       }
 
@@ -11776,6 +11994,7 @@ sem os tons escuros atuais.
         if (!modal) return;
         renderizarCheckKml();
         renderizarCheckLitragemRepetida();
+        renderizarCheckVeiculosParados();
         modal.style.display = 'flex';
       }
       function fecharModalCheckKml(event) {
@@ -11845,7 +12064,7 @@ sem os tons escuros atuais.
         tbody.innerHTML = '';
         if (itensResumo.length === 0) {
           var trVazio = document.createElement('tr'); var tdVazio = document.createElement('td');
-          tdVazio.colSpan = 7; tdVazio.className = 'check-ppc-empty'; tdVazio.textContent = 'Nenhum colaborador atende às regras de KM/L ou litragem repetida para o filtro atual.';
+          tdVazio.colSpan = 11; tdVazio.className = 'check-ppc-empty'; tdVazio.textContent = 'Nenhum colaborador atende às regras de KM/L ou litragem repetida para o filtro atual.';
           trVazio.appendChild(tdVazio); tbody.appendChild(trVazio);
         } else {
           itensResumo.forEach(function(item) {
@@ -11867,7 +12086,9 @@ sem os tons escuros atuais.
             btn.type = 'button'; btn.className = 'check-ppc-action-btn'; btn.innerHTML = '<i class="fa-solid fa-check"></i> CIENTE E ENCAMINHAR AO COORDENADOR';
             btn.title = 'Registrar ciência e encaminhar ao coordenador';
             btn.addEventListener('click', function() { alert('O botão CIENTE E ENCAMINHAR AO COORDENADOR está apenas visual nesta versão. Para registrar o encaminhamento no histórico e na base, ainda é necessário conectar esta ação ao Google Apps Script. Nenhum encaminhamento foi salvo.'); });
-            tdAcao.appendChild(btn); tr.appendChild(tdAcao); tbody.appendChild(tr);
+            tdAcao.appendChild(btn); tr.appendChild(tdAcao);
+            adicionarColunasCoordenadorVisual_(tr);
+            tbody.appendChild(tr);
           });
         }
         if (totalEl) totalEl.textContent = itensResumo.length + (itensResumo.length === 1 ? ' colaborador sinalizado' : ' colaboradores sinalizados') + ' no total';
@@ -11935,7 +12156,7 @@ sem os tons escuros atuais.
         if (!totalEl) return;
         var result = obterChecksLitragemRepetidaPendentes();
         totalEl.textContent = String(result.colaboradores.length);
-        if (card) { card.classList.toggle('is-clear', !result.semBase && result.colaboradores.length === 0); card.setAttribute('aria-label', result.semBase ? 'Check Litragem Repetida aguardando integração da base Analítico KM/L' : 'Abrir Check Litragem Repetida: ' + result.colaboradores.length + ' colaboradores sinalizados'); }
+        if (card) { card.classList.toggle('is-clear', !result.semBase && result.colaboradores.length === 0); card.setAttribute('aria-label', result.semBase ? 'Check Litragem Repetida  da base Analítico KM/L' : 'Abrir Check Litragem Repetida: ' + result.colaboradores.length + ' colaboradores sinalizados'); }
         if (status) { status.textContent = result.semBase ? 'Aguardando base' : (result.colaboradores.length ? 'Pendentes' : 'Em dia'); status.classList.toggle('is-clear', !result.semBase && result.colaboradores.length === 0); }
         if (label) label.textContent = result.semBase ? 'Base não conectada' : (result.colaboradores.length === 1 ? '1 colaborador sinalizado' : result.colaboradores.length + ' colaboradores sinalizados');
         if (link) link.textContent = result.semBase ? 'A nova aba será conectada no Google Apps Script' : (result.colaboradores.length ? 'Clique para consultar o histórico completo →' : 'Clique para conferir a regra →');
@@ -11966,7 +12187,7 @@ sem os tons escuros atuais.
             tbody.appendChild(tr);
           });
         }
-        if (totalEl) totalEl.textContent = result.semBase ? 'Aguardando integração da base Analítico KM/L.' : (result.colaboradores.length + (result.colaboradores.length === 1 ? ' colaborador sinalizado; ' : ' colaboradores sinalizados; ') + result.registros.length + ' abastecimentos exibidos');
+        if (totalEl) totalEl.textContent = result.semBase ? ' da base Analítico KM/L.' : (result.colaboradores.length + (result.colaboradores.length === 1 ? ' colaborador sinalizado; ' : ' colaboradores sinalizados; ') + result.registros.length + ' abastecimentos exibidos');
       }
 
       // CHECK TRATAR PONTO: a data mais recente da base (D-1) fica fora do check.
@@ -12141,7 +12362,7 @@ sem os tons escuros atuais.
         tbody.innerHTML = '';
         if (!dados.length) {
           var trVazio = document.createElement('tr'); var tdVazio = document.createElement('td');
-          tdVazio.colSpan = 6; tdVazio.className = 'check-ppc-empty'; tdVazio.textContent = 'Nenhum colaborador atende às premissas para o mês vigente e filtro atual.';
+          tdVazio.colSpan = 10; tdVazio.className = 'check-ppc-empty'; tdVazio.textContent = 'Nenhum colaborador atende às premissas para o mês vigente e filtro atual.';
           trVazio.appendChild(tdVazio); tbody.appendChild(trVazio);
         } else {
           dados.forEach(function(item) {
@@ -12163,7 +12384,12 @@ sem os tons escuros atuais.
             btn.type = 'button'; btn.className = 'check-ppc-action-btn'; btn.innerHTML = '<i class="fa-solid fa-check"></i> CIENTE E ENCAMINHAR AO COORDENADOR';
             btn.title = 'Registrar ciência e encaminhar ao coordenador';
             btn.addEventListener('click', function() { alert('A interface está pronta, mas o registro da observação e o encaminhamento ao coordenador ainda precisam ser conectados ao Google Apps Script. Nenhuma informação foi salva ou enviada.'); });
-            tdAcao.appendChild(btn); tr.appendChild(tdAcao); tbody.appendChild(tr);
+            tdAcao.appendChild(btn); tr.appendChild(tdAcao);
+            var tdStatus = document.createElement('td'); tdStatus.className = 'check-status-cell';
+            var statusPill = document.createElement('span'); statusPill.className = 'check-status-pill check-status-pending'; statusPill.textContent = 'Pendente de análise do supervisor'; tdStatus.appendChild(statusPill); tr.appendChild(tdStatus);
+            var tdObsCoord = document.createElement('td'); var obsCoord = document.createElement('textarea'); obsCoord.className = 'check-ppc-observation check-coordinator-observation'; obsCoord.rows = 1; obsCoord.maxLength = 500; obsCoord.placeholder = 'Digite a observação do coordenador...'; obsCoord.setAttribute('aria-label', 'Observação do coordenador para ' + String(funcionario || 'colaborador')); tdObsCoord.appendChild(obsCoord); tr.appendChild(tdObsCoord);
+            var tdAprovar = document.createElement('td'); var btnAprovar = document.createElement('button'); btnAprovar.type = 'button'; btnAprovar.className = 'check-coordinator-approve-btn'; btnAprovar.innerHTML = '&#10003; APROVAR'; btnAprovar.addEventListener('click', function(){ alert('A aprovação será ativada quando a gravação no Google Apps Script for implementada. Nenhuma informação foi salva.'); }); tdAprovar.appendChild(btnAprovar); tr.appendChild(tdAprovar);
+            var tdReprovar = document.createElement('td'); var btnReprovar = document.createElement('button'); btnReprovar.type = 'button'; btnReprovar.className = 'check-coordinator-reject-btn'; btnReprovar.innerHTML = '&#10005; REPROVAR'; btnReprovar.addEventListener('click', function(){ alert('A reprovação será ativada quando a gravação no Google Apps Script for implementada. Nenhuma informação foi salva.'); }); tdReprovar.appendChild(btnReprovar); tr.appendChild(tdReprovar); tbody.appendChild(tr);
           });
         }
         if (totalEl) totalEl.textContent = dados.length + (dados.length === 1 ? ' colaborador encontrado' : ' colaboradores encontrados');
@@ -12410,6 +12636,21 @@ sem os tons escuros atuais.
       function obterNomeSelecionadoParaAnalitico() {
         var nomeSelecionado = selects['filterNome'] ? selects['filterNome'].getValue() : [];
         var lista = Array.isArray(nomeSelecionado) ? nomeSelecionado.slice() : (nomeSelecionado ? [nomeSelecionado] : []);
+        if (lista.length === 0) {
+          var coordenadores = selects['filterCoordenador'] ? selects['filterCoordenador'].getValue() : [];
+          coordenadores = Array.isArray(coordenadores) ? coordenadores : (coordenadores ? [coordenadores] : []);
+          if (coordenadores.length > 0 && typeof getFilteredData === 'function') {
+            // Quando apenas o coordenador está filtrado, usa a lista de pessoas da RAIO X
+            // já filtrada por coordenador, mês, setor e quartil para recalcular os checks.
+            var baseFiltrada = getFilteredData(false) || [];
+            var nomesValidos = {};
+            baseFiltrada.forEach(function(registro) {
+              var nome = String(obterValorFiltroDoRegistro(registro, 'NOME') || '').trim();
+              if (nome) nomesValidos[limparTexto(nome)] = nome;
+            });
+            lista = Object.keys(nomesValidos).map(function(chave) { return nomesValidos[chave]; });
+          }
+        }
         if (document.body.classList.contains('tv-mode') && lista.length === 0 && tvApresentacaoNomeAtual) {
           lista = [tvApresentacaoNomeAtual];
         }
@@ -15838,6 +16079,73 @@ body.tv-mode .ranking-board-row.rank-1 .ranking-board-avatar-fallback {
 
 
 
+
+<style id="check-colunas-coordenador-todos-css">
+  .check-coord-status-badge{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;max-width:100%;padding:7px 9px;border:1px solid #ffd166;border-radius:18px;background:#fff1cf;color:#8a5700;font-size:10px;font-weight:700;line-height:1.25;text-align:center;white-space:normal;overflow-wrap:anywhere}
+  .check-coord-observation{display:block;width:100%;min-width:0;max-width:100%;min-height:38px;box-sizing:border-box;padding:7px;border:1px solid #cbd5e1;border-radius:7px;font:inherit;font-size:10px;resize:vertical;background:#fff;color:#334155}
+  .check-coord-action{display:block;width:100%;min-width:0;box-sizing:border-box;padding:8px 5px;border:0;border-radius:7px;color:#fff;font-size:10px;font-weight:800;line-height:1.2;white-space:normal;overflow-wrap:anywhere;opacity:.78;cursor:not-allowed}
+  .check-coord-action.approve{background:#198754}.check-coord-action.reject{background:#e5484d}
+  .check-coord-col{min-width:105px}
+  .check-ppc-table th.check-coord-col{font-size:10px;line-height:1.2;white-space:normal}
+  .check-ppc-table td.check-coord-col{vertical-align:middle;white-space:normal;overflow-wrap:anywhere}
+  .check-ppc-table-wrap{max-width:100%;overflow-x:auto}
+  .check-ppc-table{border-collapse:collapse}
+</style>
+<script id="check-colunas-coordenador-todos-js">
+(function(){
+  'use strict';
+  var tableIds=[
+    'checkConectorInstalacaoTableBody','checkGpsPontoTableBody','checkDropIatTableBody',
+    'checkAbsClienteTableBody','checkKmlTableBody',
+    'checkTratarPontoTableBody','checkBhHePtTableBody','checkPpcTableBody'
+  ];
+  var labels=['STATUS DO CHECK','OBSERVAÇÃO COORDENADOR','APROVAÇÃO COORDENADOR','REPROVAÇÃO COORDENADOR'];
+  function tableForBody(body){return body&&body.closest('table');}
+  function ensureHeaders(table){
+    var head=table&&table.tHead;
+    if(!head||!head.rows.length)return;
+    var row=head.rows[0];
+    var hasStatus=Array.from(row.cells).some(function(c){return (c.textContent||'').trim().toUpperCase()==='STATUS DO CHECK';});
+    if(hasStatus)return;
+    labels.forEach(function(label){var th=document.createElement('th');th.textContent=label;th.className='check-coord-col';row.appendChild(th);});
+  }
+  function createCell(index){
+    var td=document.createElement('td');td.className='check-coord-col';
+    if(index===0){var badge=document.createElement('span');badge.className='check-coord-status-badge';badge.textContent='Pendente de análise do supervisor';td.appendChild(badge);}
+    if(index===1){var obs=document.createElement('textarea');obs.className='check-coord-observation';obs.rows=2;obs.maxLength=1000;obs.placeholder='Digite a observação do coordenador...';obs.setAttribute('aria-label','Observação do coordenador');obs.title='Campo visual: a gravação será conectada na etapa de persistência.';td.appendChild(obs);}
+    if(index===2||index===3){var btn=document.createElement('button');btn.type='button';btn.disabled=true;btn.className='check-coord-action '+(index===2?'approve':'reject');btn.textContent=index===2?'✓ APROVAR':'✕ REPROVAR';btn.title='Ação visual. A gravação e o fluxo de aprovação ainda não estão conectados.';td.appendChild(btn);}
+    return td;
+  }
+  function ensureRows(table){
+    if(!table||!table.tHead||!table.tBodies.length)return;
+    var expected=table.tHead.rows[0].cells.length;
+    Array.from(table.tBodies).forEach(function(tbody){Array.from(tbody.rows).forEach(function(row){
+      if(row.cells.length===1 && row.cells[0].classList.contains('check-ppc-empty')){row.cells[0].colSpan=expected;return;}
+      while(row.cells.length<expected) row.appendChild(createCell(row.cells.length-(expected-4)));
+    });});
+  }
+  function enhance(body){var table=tableForBody(body);if(!table)return;ensureHeaders(table);ensureRows(table);}
+  function init(){
+    tableIds.forEach(function(id){var body=document.getElementById(id);if(!body)return;enhance(body);if(window.MutationObserver){var obs=new MutationObserver(function(){enhance(body);});obs.observe(body,{childList:true,subtree:true});}});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
+
+<style id="check-v100-fixes">
+/* A tabela histórica de litragem repetida é somente analítica: não recebe colunas de status/coordenação. */
+#modalCheckKml #checkLitragemRepetidaTable { width:100% !important; min-width:900px !important; table-layout:fixed !important; }
+#modalCheckKml #checkLitragemRepetidaTable th, #modalCheckKml #checkLitragemRepetidaTable td { padding:7px 8px !important; font-size:10px !important; line-height:1.2 !important; vertical-align:middle !important; white-space:normal !important; overflow-wrap:anywhere !important; }
+#modalCheckKml #checkLitragemRepetidaTable th:nth-child(1), #modalCheckKml #checkLitragemRepetidaTable td:nth-child(1) { width:30% !important; }
+#modalCheckKml #checkLitragemRepetidaTable th:nth-child(2), #modalCheckKml #checkLitragemRepetidaTable td:nth-child(2) { width:19% !important; }
+#modalCheckKml #checkLitragemRepetidaTable th:nth-child(3), #modalCheckKml #checkLitragemRepetidaTable td:nth-child(3) { width:12% !important; }
+#modalCheckKml #checkLitragemRepetidaTable th:nth-child(4), #modalCheckKml #checkLitragemRepetidaTable td:nth-child(4) { width:17% !important; }
+#modalCheckKml #checkLitragemRepetidaTable th:nth-child(5), #modalCheckKml #checkLitragemRepetidaTable td:nth-child(5), #modalCheckKml #checkLitragemRepetidaTable th:nth-child(6), #modalCheckKml #checkLitragemRepetidaTable td:nth-child(6) { width:11% !important; }
+#modalCheckKml .check-kml-history-wrap { max-height:300px !important; overflow:auto !important; }
+#modalCheckBhHePt .check-ppc-table-wrap { overflow-x:auto !important; }
+</style>
+
 </body>
 
 
@@ -17458,6 +17766,121 @@ body.dark-mode.tv-mode .ranking-executive-card.recolhimento .ranking-board-row::
     font-size: 13px !important;
   }
 </style>
+
+<!-- CORREÇÃO ROBUSTA: CLIQUE E EXIBIÇÃO DO MODAL DROP IAT -->
+<style id="drop-iat-modal-final-fix">
+  #modalCheckDropIat {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 2147483647 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: auto !important;
+    padding: 12px !important;
+    background: rgba(0,0,0,.62) !important;
+  }
+  #modalCheckDropIat .check-ppc-modal-container {
+    position: relative !important;
+    margin: auto !important;
+    max-height: calc(100vh - 24px) !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  #modalCheckDropIat .check-ppc-modal-body {
+    min-height: 0 !important;
+    overflow: auto !important;
+  }
+  #modalCheckDropIat .check-ppc-table-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+  }
+</style>
+<script id="drop-iat-click-fix-v2">
+(function () {
+  'use strict';
+
+  function prepararModal() {
+    var modal = document.getElementById('modalCheckDropIat');
+    if (modal && modal.parentElement !== document.body) {
+      document.body.appendChild(modal);
+    }
+  }
+
+  function renderizarSeDisponivel() {
+    try {
+      if (typeof window.renderizarCheckDropIat === 'function') {
+        window.renderizarCheckDropIat();
+      } else if (typeof renderizarCheckDropIat === 'function') {
+        renderizarCheckDropIat();
+      } else {
+        console.error('Drop IAT: a função que monta a tabela não está disponível globalmente.');
+      }
+    } catch (err) {
+      console.error('Erro ao montar a tabela do Check Drop IAT:', err);
+    }
+  }
+
+  function abrirModal(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    prepararModal();
+    var modal = document.getElementById('modalCheckDropIat');
+    if (!modal) {
+      console.error('Drop IAT: elemento #modalCheckDropIat não encontrado.');
+      return;
+    }
+    modal.style.setProperty('display', 'flex', 'important');
+    modal.style.setProperty('visibility', 'visible', 'important');
+    modal.style.setProperty('opacity', '1', 'important');
+    modal.style.setProperty('pointer-events', 'auto', 'important');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    renderizarSeDisponivel();
+  }
+
+  function vincularCard() {
+    var card = document.getElementById('checkDropIatCard');
+    if (!card || card.dataset.dropIatFixV2 === '1') return;
+    card.dataset.dropIatFixV2 = '1';
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.style.setProperty('cursor', 'pointer', 'important');
+    // Substitui o onclick antigo para não depender de abrirDropIatSafely.
+    card.onclick = abrirModal;
+    card.onkeydown = function (event) {
+      if (event.key === 'Enter' || event.key === ' ') abrirModal(event);
+    };
+  }
+
+  function iniciar() {
+    prepararModal();
+    vincularCard();
+    // Reaplica o vínculo caso o painel reconstrua o card dinamicamente.
+    if (window.MutationObserver) {
+      var observer = new MutationObserver(function () {
+        prepararModal();
+        vincularCard();
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
+  }
+
+  window.abrirAnaliticoDropIAT = abrirModal;
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', iniciar);
+  } else {
+    iniciar();
+  }
+})();
+</script>
+
 </body>
 
 
@@ -18569,4 +18992,383 @@ body.tv-mode:not(.dark-mode) .ranking-executive-card.recolhimento .ranking-board
   opacity: 1 !important;
   z-index: 0 !important;
 }
+
+      /* O layout de CIDADES RESPONSÁVEIS é definido no bloco CSS original acima. */
 </style>
+
+
+<style id="layout-opcao2-checks-separados">
+/* OPÇÃO 2 — indicadores em grade uniforme + faixa horizontal exclusiva para checks */
+.kpi-grid > .kpi-check-stack { display: contents !important; }
+.kpi-grid > .kpi-card { width: 100%; min-width: 0; }
+.checks-dedicados-section { margin-top: 14px; padding: 12px; border: 1px solid var(--border-color, #e1e5ea); border-radius: 12px; background: var(--card-bg, #fff); box-shadow: 0 2px 8px rgba(25,35,45,.04); }
+.checks-dedicados-header { display:flex; align-items:center; gap:9px; margin:0 0 10px; color:var(--text-main, #293241); font-size:12px; font-weight:800; letter-spacing:.25px; }
+.checks-dedicados-header i { color:#f4511e; }
+.checks-dedicados-count { display:inline-flex; align-items:center; justify-content:center; min-width:22px; height:22px; padding:0 6px; border-radius:99px; background:#f4511e; color:#fff; font-size:11px; }
+.checks-dedicados-subtitle { margin-left:auto; color:var(--text-muted, #718096); font-size:10px; font-weight:500; letter-spacing:0; }
+.checks-dedicados-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+.checks-dedicados-grid .check-ppc-card { width:100%; min-height:54px; margin:0; padding:8px 10px; }
+.checks-dedicados-grid .check-ppc-link { display:none !important; }
+.checks-dedicados-grid .check-ppc-heading strong { font-size:10px; }
+.checks-dedicados-grid .check-ppc-card-top { gap:7px; }
+body.dark-mode .checks-dedicados-section { background:#171b20; border-color:#353c45; }
+body.dark-mode .checks-dedicados-header { color:#f2f4f7; }
+body.dark-mode .checks-dedicados-subtitle { color:#aab3bf; }
+body.tv-mode .checks-dedicados-section { margin-top:10px; }
+@media (min-width:1600px) { .checks-dedicados-grid { grid-template-columns:repeat(6,minmax(0,1fr)); } }
+@media (max-width:1399px) and (min-width:1000px) { .checks-dedicados-grid { grid-template-columns:repeat(4,minmax(0,1fr)); } }
+@media (max-width:999px) and (min-width:650px) { .checks-dedicados-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media (max-width:649px) { .checks-dedicados-grid { grid-template-columns:repeat(1,minmax(0,1fr)); } .checks-dedicados-subtitle { display:none; } }
+
+  /* Protótipo visual: colunas do coordenador apenas no Check PPC */
+  #modalCheckPpc .check-ppc-modal-container { width: 98%; max-width: 1700px; }
+  #modalCheckPpc .check-ppc-table { min-width: 1700px; width: 100%; table-layout: auto; }
+  #modalCheckPpc .check-ppc-table-wrap { overflow-x: auto !important; max-width: 100%; }
+  #modalCheckPpc .coord-rejection-cell { min-width: 150px; }
+  #modalCheckPpc .check-ppc-table th, #modalCheckPpc .check-ppc-table td { vertical-align: middle; }
+  #modalCheckPpc .coord-approval-cell, #modalCheckPpc .coord-rejection-cell { min-width: 150px; text-align: center; }
+  #modalCheckPpc .ppc-status-cell { min-width: 190px; text-align: center; }
+  #modalCheckPpc .ppc-status-badge { display: inline-block; padding: 6px 9px; border-radius: 999px; font-size: 10px; line-height: 1.25; font-weight: 700; white-space: normal; }
+  #modalCheckPpc .ppc-status-supervisor { color: #8a5700; background: #fff0cf; border: 1px solid #f3d58a; }
+  #modalCheckPpc .coord-observation-cell { min-width: 220px; }
+  #modalCheckPpc .coord-observation { width: 100%; min-width: 190px; min-height: 42px; box-sizing: border-box; resize: vertical; border: 1px solid #d5dbe5; border-radius: 7px; padding: 7px; font: inherit; }
+  #modalCheckPpc .coord-demo-btn { width: 100%; min-width: 135px; border: 0; border-radius: 7px; padding: 9px 10px; font-size: 11px; font-weight: 700; line-height: 1.2; color: #fff; cursor: not-allowed; opacity: .78; }
+  #modalCheckPpc .coord-demo-approve { background: #16834a; }
+  #modalCheckPpc .coord-demo-reject { background: #d92323; }
+  #modalCheckPpc .coord-demo-note { display: block; color: #64748b; font-size: 10px; margin-top: 4px; }
+
+
+/* AJUSTE VISUAL v90: modal amplo, cabeçalho compacto e colunas sem esticar linhas */
+#modalCheckPpc { padding: 12px !important; }
+#modalCheckPpc .check-ppc-modal-container {
+  width: calc(100vw - 40px) !important; max-width: 1880px !important;
+  max-height: calc(100vh - 40px) !important; margin: 0 auto !important;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+#modalCheckPpc .check-ppc-table-wrap {
+  width: 100% !important; max-width: 100% !important; overflow-x: auto !important;
+  overflow-y: auto !important; flex: 1 1 auto; min-height: 0;
+}
+#modalCheckPpc .check-ppc-table {
+  width: 100% !important; min-width: 0 !important; table-layout: fixed !important;
+  border-collapse: collapse !important;
+}
+#modalCheckPpc .check-ppc-table th,
+#modalCheckPpc .check-ppc-table td {
+  padding: 9px 7px !important; font-size: 11px !important; line-height: 1.25 !important;
+  vertical-align: middle !important; white-space: normal !important;
+  overflow-wrap: anywhere !important; box-sizing: border-box;
+}
+#modalCheckPpc .check-ppc-table th { height: auto !important; min-height: 0 !important; }
+#modalCheckPpc .check-ppc-table th:nth-child(1), #modalCheckPpc .check-ppc-table td:nth-child(1) { width: 19%; }
+#modalCheckPpc .check-ppc-table th:nth-child(2), #modalCheckPpc .check-ppc-table td:nth-child(2) { width: 6%; }
+#modalCheckPpc .check-ppc-table th:nth-child(3), #modalCheckPpc .check-ppc-table td:nth-child(3) { width: 6%; }
+#modalCheckPpc .check-ppc-table th:nth-child(4), #modalCheckPpc .check-ppc-table td:nth-child(4) { width: 13%; }
+#modalCheckPpc .check-ppc-table th:nth-child(5), #modalCheckPpc .check-ppc-table td:nth-child(5) { width: 15%; }
+#modalCheckPpc .check-ppc-table th:nth-child(6), #modalCheckPpc .check-ppc-table td:nth-child(6) { width: 11%; }
+#modalCheckPpc .check-ppc-table th:nth-child(7), #modalCheckPpc .check-ppc-table td:nth-child(7) { width: 12%; }
+#modalCheckPpc .check-ppc-table th:nth-child(8), #modalCheckPpc .check-ppc-table td:nth-child(8) { width: 9%; }
+#modalCheckPpc .check-ppc-table th:nth-child(9), #modalCheckPpc .check-ppc-table td:nth-child(9) { width: 9%; }
+#modalCheckPpc .coord-observation-cell { min-width: 0 !important; }
+#modalCheckPpc .coord-observation { min-width: 0 !important; width: 100% !important; min-height: 42px; font-size: 11px !important; }
+#modalCheckPpc .coord-approval-cell, #modalCheckPpc .coord-rejection-cell,
+#modalCheckPpc .ppc-status-cell { min-width: 0 !important; text-align: center; }
+#modalCheckPpc .coord-demo-btn { min-width: 0 !important; width: 100% !important; padding: 8px 5px !important; font-size: 10px !important; white-space: normal !important; }
+#modalCheckPpc .ppc-status-badge { max-width: 100%; white-space: normal !important; overflow-wrap: anywhere; }
+@media (max-width: 1100px) {
+  #modalCheckPpc .check-ppc-table { min-width: 1150px !important; }
+  #modalCheckPpc .check-ppc-modal-container { width: calc(100vw - 24px) !important; }
+}
+
+
+  /* CORREÇÃO VISUAL v91 — modal PPC: impedir sobreposição entre observação e botões */
+  #modalCheckPpc .check-ppc-modal-container {
+    width: min(98vw, 1760px) !important;
+    max-width: 1760px !important;
+    max-height: 92vh;
+  }
+  #modalCheckPpc .check-ppc-modal-body {
+    padding: 14px 18px 18px;
+    max-height: calc(92vh - 86px);
+    overflow: auto;
+  }
+  #modalCheckPpc .check-ppc-table-wrap {
+    width: 100%; max-width: 100%; overflow-x: auto; overflow-y: auto;
+  }
+  #modalCheckPpc .check-ppc-table {
+    width: 100% !important; min-width: 1320px; table-layout: fixed !important;
+    border-collapse: collapse; font-size: 11px;
+  }
+  #modalCheckPpc .check-ppc-table th,
+  #modalCheckPpc .check-ppc-table td {
+    box-sizing: border-box; padding: 9px 7px; white-space: normal;
+    overflow-wrap: anywhere; vertical-align: middle;
+  }
+  #modalCheckPpc .check-ppc-table thead th { line-height: 1.25; font-size: 10px; }
+  #modalCheckPpc .check-ppc-table th:nth-child(1), #modalCheckPpc .check-ppc-table td:nth-child(1) { width: 20%; }
+  #modalCheckPpc .check-ppc-table th:nth-child(2), #modalCheckPpc .check-ppc-table td:nth-child(2) { width: 6%; text-align: center; }
+  #modalCheckPpc .check-ppc-table th:nth-child(3), #modalCheckPpc .check-ppc-table td:nth-child(3) { width: 5%; text-align: center; }
+  #modalCheckPpc .check-ppc-table th:nth-child(4), #modalCheckPpc .check-ppc-table td:nth-child(4) { width: 13%; }
+  #modalCheckPpc .check-ppc-table th:nth-child(5), #modalCheckPpc .check-ppc-table td:nth-child(5) { width: 15%; }
+  #modalCheckPpc .check-ppc-table th:nth-child(6), #modalCheckPpc .check-ppc-table td:nth-child(6) { width: 11%; }
+  #modalCheckPpc .check-ppc-table th:nth-child(7), #modalCheckPpc .check-ppc-table td:nth-child(7) { width: 12%; }
+  #modalCheckPpc .check-ppc-table th:nth-child(8), #modalCheckPpc .check-ppc-table td:nth-child(8) { width: 9%; }
+  #modalCheckPpc .check-ppc-table th:nth-child(9), #modalCheckPpc .check-ppc-table td:nth-child(9) { width: 9%; }
+  #modalCheckPpc .check-ppc-observation { display: block; width: 100%; min-width: 0 !important; max-width: 100%; min-height: 38px; box-sizing: border-box; padding: 7px; font-size: 10px; }
+  #modalCheckPpc .check-ppc-action-cell { min-width: 0 !important; padding: 7px 5px; }
+  #modalCheckPpc .check-ppc-action-btn { display: flex; width: 100%; min-width: 0 !important; max-width: 100%; box-sizing: border-box; padding: 8px 5px; font-size: 9px; line-height: 1.25; white-space: normal; overflow-wrap: anywhere; }
+  #modalCheckPpc .check-ppc-status, #modalCheckPpc .check-status-badge { white-space: normal; max-width: 100%; overflow-wrap: anywhere; line-height: 1.25; }
+  @media (max-width: 900px) {
+    #modalCheckPpc .check-ppc-modal-container { width: 98vw !important; }
+    #modalCheckPpc .check-ppc-modal-body { padding: 10px; }
+    #modalCheckPpc .check-ppc-table { min-width: 1250px; }
+  }
+</style>
+<script id="layout-opcao2-checks-separados-js">
+(function(){
+  function aplicarLayoutChecksSeparados(){
+    var grid=document.querySelector('.kpi-grid');
+    if(!grid || grid.dataset.layoutOpcao2Aplicado==='1') return;
+    var stacks=Array.from(grid.querySelectorAll(':scope > .kpi-check-stack'));
+    if(!stacks.length) return;
+    var section=document.createElement('div');
+    section.className='checks-dedicados-section';
+    section.id='checksDedicadosSection';
+    section.innerHTML='<div class="checks-dedicados-header"><i class="fa-solid fa-clipboard-check"></i><span>CHECKS PENDENTES</span><span class="checks-dedicados-count" id="checksDedicadosTotal">0</span><span class="checks-dedicados-subtitle">Área exclusiva para indicadores que possuem check</span></div><div class="checks-dedicados-grid" id="checksDedicadosGrid"></div>';
+    var checksGrid=section.querySelector('#checksDedicadosGrid');
+    var checks=[];
+    stacks.forEach(function(stack){
+      var kpis=Array.from(stack.querySelectorAll(':scope > .kpi-card'));
+      var cards=Array.from(stack.querySelectorAll(':scope > .check-ppc-card'));
+      kpis.forEach(function(kpi){ grid.insertBefore(kpi, stack); });
+      cards.forEach(function(card){ checks.push(card); });
+      stack.remove();
+    });
+    checks.forEach(function(card){ checksGrid.appendChild(card); });
+    function atualizarTotalChecksPendentes(){
+      var total=0;
+      checks.forEach(function(card){
+        var badge=card.querySelector('.check-ppc-count-badge');
+        if(!badge) return;
+        var valor=parseInt(String(badge.textContent||'0').replace(/[^0-9-]/g,''),10);
+        if(Number.isFinite(valor) && valor>0) total+=valor;
+      });
+      var totalEl=section.querySelector('#checksDedicadosTotal');
+      if(totalEl) totalEl.textContent=String(total);
+    }
+    // O número representa o total de pendências nos checks (soma dos badges), não a quantidade de tipos de check.
+    atualizarTotalChecksPendentes();
+    checks.forEach(function(card){
+      var badge=card.querySelector('.check-ppc-count-badge');
+      if(badge && window.MutationObserver){
+        new MutationObserver(atualizarTotalChecksPendentes).observe(badge,{childList:true,characterData:true,subtree:true});
+      }
+    });
+    var tituloIndicadores=grid.parentNode.querySelector('.section-title-kpi-destaque');
+    if(tituloIndicadores && tituloIndicadores.parentNode===grid.parentNode){
+      grid.parentNode.insertBefore(section,tituloIndicadores);
+    } else {
+      grid.parentNode.insertBefore(section,grid);
+    }
+    grid.dataset.layoutOpcao2Aplicado='1';
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', aplicarLayoutChecksSeparados, {once:true});
+  else aplicarLayoutChecksSeparados();
+})();
+</script>
+
+<style id="fix-gps-ponto-scroll-v94">
+/* v94: deixa a barra horizontal do GPS + Ponto sempre acessível, sem rolar até o fim dos registros */
+#modalCheckGpsPonto { padding: 12px !important; align-items: center !important; justify-content: center !important; }
+#modalCheckGpsPonto > .check-ppc-modal-container {
+  width: min(96vw, 1600px) !important; max-width: 1600px !important;
+  height: min(88vh, 820px) !important; max-height: 88vh !important;
+  margin: 0 auto !important; display: flex !important; flex-direction: column !important;
+  overflow: hidden !important; min-height: 0 !important;
+}
+#modalCheckGpsPonto > .check-ppc-modal-container > .modal-header { flex: 0 0 auto !important; }
+#modalCheckGpsPonto .check-ppc-modal-body {
+  flex: 1 1 auto !important; min-height: 0 !important; height: auto !important;
+  max-height: none !important; overflow: hidden !important;
+  display: flex !important; flex-direction: column !important; padding: 12px 18px 10px !important;
+}
+#modalCheckGpsPonto .check-ppc-table-wrap {
+  flex: 1 1 auto !important; min-height: 0 !important; max-height: none !important;
+  width: 100% !important; max-width: 100% !important;
+  overflow: auto !important; overscroll-behavior: contain;
+  scrollbar-gutter: stable both-edges;
+}
+#modalCheckGpsPonto .check-ppc-table { width: max-content !important; min-width: 1450px !important; table-layout: auto !important; }
+#modalCheckGpsPonto .check-ppc-table th, #modalCheckGpsPonto .check-ppc-table td { white-space: normal; vertical-align: middle; }
+#modalCheckGpsPonto .check-ppc-modal-footer { flex: 0 0 auto !important; position: relative !important; background: #fff; padding: 8px 0 2px !important; }
+@media (max-width: 800px) {
+  #modalCheckGpsPonto > .check-ppc-modal-container { width: 98vw !important; height: 88vh !important; }
+  #modalCheckGpsPonto .check-ppc-table { min-width: 1350px !important; }
+}
+</style>
+
+
+<style id="ajuste-observacoes-abast-kml-gps-v95">
+/* v95 — campos de observação mais largos e segunda tabela de KM/L mais compacta */
+/* Abastecimento/Cliente: mais espaço para observações, sem esmagar os campos de decisão. */
+#modalCheckAbsCliente .check-ppc-table { min-width: 1780px !important; width: max-content !important; table-layout: fixed !important; }
+#modalCheckAbsCliente .check-ppc-table th:nth-child(7), #modalCheckAbsCliente .check-ppc-table td:nth-child(7) { width: 190px !important; min-width: 190px !important; }
+#modalCheckAbsCliente .check-ppc-table th:nth-child(10), #modalCheckAbsCliente .check-ppc-table td:nth-child(10) { width: 190px !important; min-width: 190px !important; }
+#modalCheckAbsCliente .check-ppc-table td:nth-child(7) textarea,
+#modalCheckAbsCliente .check-ppc-table td:nth-child(10) textarea,
+#modalCheckAbsCliente .check-ppc-table .check-ppc-observation,
+#modalCheckAbsCliente .check-ppc-table .check-coord-observation { width: 100% !important; min-width: 0 !important; min-height: 48px !important; height: 48px !important; box-sizing: border-box !important; padding: 7px 8px !important; font-size: 11px !important; line-height: 1.3 !important; resize: vertical; }
+#modalCheckAbsCliente .check-ppc-table th, #modalCheckAbsCliente .check-ppc-table td { vertical-align: middle !important; }
+
+/* KM/L: tabela principal mais larga para os dois campos de observação. */
+#modalCheckKml .check-kml-summary-wrap { overflow-x: auto !important; }
+#modalCheckKml .check-kml-summary-wrap > .check-ppc-table { min-width: 1780px !important; width: max-content !important; table-layout: fixed !important; }
+#modalCheckKml .check-kml-summary-wrap > .check-ppc-table th:nth-child(7),
+#modalCheckKml .check-kml-summary-wrap > .check-ppc-table td:nth-child(7),
+#modalCheckKml .check-kml-summary-wrap > .check-ppc-table th:nth-child(10),
+#modalCheckKml .check-kml-summary-wrap > .check-ppc-table td:nth-child(10) { width: 190px !important; min-width: 190px !important; }
+#modalCheckKml .check-kml-summary-wrap > .check-ppc-table .check-ppc-observation,
+#modalCheckKml .check-kml-summary-wrap > .check-ppc-table .check-coord-observation,
+#modalCheckKml .check-kml-summary-wrap > .check-ppc-table td:nth-child(7) textarea,
+#modalCheckKml .check-kml-summary-wrap > .check-ppc-table td:nth-child(10) textarea { width: 100% !important; min-width: 0 !important; min-height: 48px !important; height: 48px !important; box-sizing: border-box !important; padding: 7px 8px !important; font-size: 11px !important; line-height: 1.3 !important; resize: vertical; }
+
+/* KM/L — segunda tabela (litragem repetida): compacta o tamanho geral das linhas. */
+#modalCheckKml #checkLitragemRepetidaTable { width: 100% !important; min-width: 0 !important; table-layout: fixed !important; }
+#modalCheckKml #checkLitragemRepetidaTable th,
+#modalCheckKml #checkLitragemRepetidaTable td { padding: 4px 6px !important; font-size: 9px !important; line-height: 1.15 !important; white-space: normal !important; overflow-wrap: anywhere !important; }
+#modalCheckKml #checkLitragemRepetidaTable tbody tr { height: auto !important; min-height: 0 !important; }
+#modalCheckKml #checkLitragemRepetidaTable .check-ppc-observation,
+#modalCheckKml #checkLitragemRepetidaTable .check-coord-observation,
+#modalCheckKml #checkLitragemRepetidaTable textarea { min-height: 28px !important; height: 32px !important; padding: 4px 5px !important; font-size: 9px !important; line-height: 1.15 !important; }
+#modalCheckKml #checkLitragemRepetidaTable .check-ppc-action-btn,
+#modalCheckKml #checkLitragemRepetidaTable .check-coord-approve-btn,
+#modalCheckKml #checkLitragemRepetidaTable .check-coord-reject-btn { min-height: 26px !important; padding: 4px 4px !important; font-size: 8px !important; line-height: 1.1 !important; }
+
+/* GPS + Ponto: coluna de observação do coordenador mais larga e campo mais alto. */
+#modalCheckGpsPonto .check-ppc-table { min-width: 1750px !important; width: max-content !important; table-layout: fixed !important; }
+#modalCheckGpsPonto .check-ppc-table th:nth-child(10),
+#modalCheckGpsPonto .check-ppc-table td:nth-child(10) { width: 205px !important; min-width: 205px !important; }
+#modalCheckGpsPonto .check-ppc-table td:nth-child(10) textarea,
+#modalCheckGpsPonto .check-ppc-table .check-coord-observation { width: 100% !important; min-width: 0 !important; min-height: 48px !important; height: 48px !important; box-sizing: border-box !important; padding: 7px 8px !important; font-size: 11px !important; line-height: 1.3 !important; resize: vertical; }
+@media (max-width: 900px) {
+  #modalCheckAbsCliente .check-ppc-table { min-width: 1780px !important; }
+  #modalCheckKml .check-kml-summary-wrap > .check-ppc-table { min-width: 1780px !important; }
+  #modalCheckGpsPonto .check-ppc-table { min-width: 1750px !important; }
+}
+</style>
+
+
+<style id="fix-modal-tables-v97">
+/* Abastecimento/Cliente: habilita a barra horizontal para alcançar as colunas finais. */
+#modalCheckAbsCliente .check-ppc-modal-body { min-width:0 !important; overflow:hidden !important; }
+#modalCheckAbsCliente .check-ppc-table-wrap { display:block !important; width:100% !important; max-width:100% !important; overflow-x:auto !important; overflow-y:auto !important; scrollbar-gutter:stable; }
+#modalCheckAbsCliente .check-ppc-table { width:max-content !important; min-width:1780px !important; table-layout:fixed !important; }
+#modalCheckAbsCliente .check-ppc-table th, #modalCheckAbsCliente .check-ppc-table td { white-space:normal !important; vertical-align:middle !important; }
+#modalCheckAbsCliente .check-ppc-table th:nth-child(7), #modalCheckAbsCliente .check-ppc-table td:nth-child(7),
+#modalCheckAbsCliente .check-ppc-table th:nth-child(10), #modalCheckAbsCliente .check-ppc-table td:nth-child(10) { min-width:190px !important; width:190px !important; }
+@media (max-width:900px) { #modalCheckAbsCliente .check-ppc-table { min-width:1780px !important; } }
+
+/* KM/L: deixa o histórico de litragem repetida compacto sem alterar a tabela principal. */
+#modalCheckKml .check-kml-history-wrap { max-height:260px !important; overflow:auto !important; width:100% !important; }
+#modalCheckKml #checkLitragemRepetidaTable { width:100% !important; min-width:1000px !important; table-layout:fixed !important; }
+#modalCheckKml #checkLitragemRepetidaTable th, #modalCheckKml #checkLitragemRepetidaTable td { padding:5px 6px !important; font-size:9px !important; line-height:1.15 !important; vertical-align:middle !important; }
+#modalCheckKml #checkLitragemRepetidaTable tbody tr { height:auto !important; min-height:0 !important; }
+#modalCheckKml #checkLitragemRepetidaTable textarea, #modalCheckKml #checkLitragemRepetidaTable .check-ppc-observation, #modalCheckKml #checkLitragemRepetidaTable .check-coord-observation { width:100% !important; min-width:0 !important; height:32px !important; min-height:32px !important; padding:4px 5px !important; font-size:9px !important; box-sizing:border-box !important; }
+#modalCheckKml #checkLitragemRepetidaTable button { min-height:27px !important; padding:4px 5px !important; font-size:8px !important; line-height:1.1 !important; }
+
+/* GPS + Ponto: o modal tem 11 colunas na versão com decisão do coordenador; ampliar a coluna de observação do coordenador (9). */
+#modalCheckGpsPonto .check-ppc-table th:nth-child(9), #modalCheckGpsPonto .check-ppc-table td:nth-child(9) { width:230px !important; min-width:230px !important; }
+#modalCheckGpsPonto .check-ppc-table td:nth-child(9) textarea, #modalCheckGpsPonto .check-ppc-table td:nth-child(9) .check-coord-observation { width:100% !important; min-width:0 !important; height:56px !important; min-height:56px !important; box-sizing:border-box !important; padding:8px !important; font-size:11px !important; line-height:1.3 !important; resize:vertical !important; }
+
+/* Drop IAT: tabela analítica com os campos de supervisor e coordenador, com rolagem horizontal. */
+#modalCheckDropIat .check-ppc-modal-body { min-width:0 !important; overflow:hidden !important; }
+#modalCheckDropIat .check-ppc-table-wrap { overflow-x:auto !important; overflow-y:visible !important; }
+#modalCheckDropIat .check-ppc-table { min-width:1700px !important; width:max-content !important; table-layout:auto !important; }
+#modalCheckDropIat .check-ppc-table th, #modalCheckDropIat .check-ppc-table td { vertical-align:middle; }
+#modalCheckDropIat .check-ppc-table td textarea { min-width:220px; min-height:38px; box-sizing:border-box; }
+#modalCheckDropIat .check-ppc-table td:nth-child(7) textarea { min-width:220px; }
+#modalCheckDropIat .check-ppc-action-cell { min-width:250px; }
+#modalCheckDropIat .check-ppc-action-btn { min-width:250px; white-space:normal; }
+#modalCheckDropIat .check-coord-approve-btn, #modalCheckDropIat .check-coord-reject-btn { min-width:120px; }
+/* Drop IAT: mantém o cartão clicável mesmo se handlers antigos falharem. */
+#modalCheckDropIat { z-index:10050 !important; }
+#modalCheckDropIat .check-ppc-modal-container { width:min(96vw,1500px) !important; max-width:1500px !important; }
+#modalCheckDropIat .check-ppc-table-wrap { width:100% !important; max-width:100% !important; overflow:auto !important; }
+#modalCheckDropIat .check-ppc-table { min-width:1700px !important; width:max-content !important; table-layout:auto !important; }
+
+/* v98: compactar cabeçalho do analítico de litragem repetida e ajustar BH+HE com 10 colunas */
+#modalCheckKml .check-kml-history-wrap { display:block !important; width:100%; max-height:245px; overflow:auto !important; position:relative; }
+#modalCheckKml #checkLitragemRepetidaTable { width:100%; min-width:1050px; table-layout:auto !important; border-collapse:separate; border-spacing:0; }
+#modalCheckKml #checkLitragemRepetidaTable thead, #modalCheckKml #checkLitragemRepetidaTable thead tr { height:auto !important; min-height:0 !important; }
+#modalCheckKml #checkLitragemRepetidaTable thead th { height:auto !important; min-height:0 !important; padding:10px 8px !important; line-height:1.25 !important; vertical-align:middle !important; white-space:normal !important; }
+#modalCheckKml #checkLitragemRepetidaTable tbody tr { height:auto !important; min-height:0 !important; }
+#modalCheckKml #checkLitragemRepetidaTable tbody td { padding:8px !important; line-height:1.25 !important; vertical-align:middle !important; }
+#modalCheckBhHePt .check-ppc-modal-body { overflow-x:auto; }
+#modalCheckBhHePt #checkBhHePtTable { width:100%; min-width:1580px; table-layout:fixed !important; }
+#modalCheckBhHePt #checkBhHePtTable th, #modalCheckBhHePt #checkBhHePtTable td { padding:8px 7px; vertical-align:middle; white-space:normal; overflow-wrap:anywhere; }
+#modalCheckBhHePt #checkBhHePtTable th:nth-child(1), #modalCheckBhHePt #checkBhHePtTable td:nth-child(1) { width:19%; }
+#modalCheckBhHePt #checkBhHePtTable th:nth-child(2), #modalCheckBhHePt #checkBhHePtTable td:nth-child(2) { width:6%; }
+#modalCheckBhHePt #checkBhHePtTable th:nth-child(3), #modalCheckBhHePt #checkBhHePtTable td:nth-child(3) { width:9%; }
+#modalCheckBhHePt #checkBhHePtTable th:nth-child(4), #modalCheckBhHePt #checkBhHePtTable td:nth-child(4) { width:13%; }
+#modalCheckBhHePt #checkBhHePtTable th:nth-child(5), #modalCheckBhHePt #checkBhHePtTable td:nth-child(5) { width:12%; }
+#modalCheckBhHePt #checkBhHePtTable th:nth-child(6), #modalCheckBhHePt #checkBhHePtTable td:nth-child(6) { width:13%; }
+#modalCheckBhHePt #checkBhHePtTable th:nth-child(7), #modalCheckBhHePt #checkBhHePtTable td:nth-child(7) { width:8%; }
+#modalCheckBhHePt #checkBhHePtTable th:nth-child(8), #modalCheckBhHePt #checkBhHePtTable td:nth-child(8) { width:8%; }
+#modalCheckBhHePt #checkBhHePtTable th:nth-child(9), #modalCheckBhHePt #checkBhHePtTable td:nth-child(9) { width:6%; }
+#modalCheckBhHePt #checkBhHePtTable th:nth-child(10), #modalCheckBhHePt #checkBhHePtTable td:nth-child(10) { width:6%; }
+#modalCheckBhHePt .check-ppc-observation { width:100%; min-width:0; box-sizing:border-box; }
+#modalCheckBhHePt .check-ppc-action-btn { width:100%; min-width:0; white-space:normal; line-height:1.2; padding:7px 5px; font-size:9px; }
+
+#modalCheckBhHePt .check-status-cell { text-align:center; }
+#modalCheckBhHePt .check-status-pill { display:inline-block; max-width:100%; border:1px solid #f8c45b; background:#fff2d2; color:#8a5200; border-radius:20px; padding:7px 8px; font-size:9px; line-height:1.2; text-align:center; white-space:normal; }
+#modalCheckBhHePt .check-coordinator-observation { min-height:38px; resize:vertical; border:1px solid #cbd5e1; border-radius:7px; padding:7px; font:inherit; font-size:10px; }
+#modalCheckBhHePt .check-coordinator-approve-btn, #modalCheckBhHePt .check-coordinator-reject-btn { width:100%; min-width:0; border:0; border-radius:6px; padding:8px 5px; color:#fff; font-weight:700; font-size:9px; line-height:1.2; white-space:normal; cursor:pointer; }
+#modalCheckBhHePt .check-coordinator-approve-btn { background:#4aa47d; }
+#modalCheckBhHePt .check-coordinator-reject-btn { background:#e45b66; }
+
+/* v103: BH + HE/PT — evitar sobreposição e permitir rolagem horizontal */
+#modalCheckBhHePt .check-ppc-modal-container { width: 99.5vw !important; max-width: 99.5vw !important; }
+#modalCheckBhHePt .check-ppc-modal-body { min-width: 0 !important; overflow: hidden !important; }
+#modalCheckBhHePt .check-ppc-table-wrap { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; overflow-y: visible !important; }
+#modalCheckBhHePt .check-ppc-table { width: max-content !important; min-width: 2200px !important; table-layout: auto !important; }
+#modalCheckBhHePt .check-ppc-table th, #modalCheckBhHePt .check-ppc-table td { white-space: normal !important; overflow-wrap: anywhere !important; }
+#modalCheckBhHePt .check-ppc-table th:nth-child(8), #modalCheckBhHePt .check-ppc-table td:nth-child(8) { min-width: 270px !important; width: 270px !important; }
+#modalCheckBhHePt .check-coordinator-observation { width: 100% !important; min-width: 250px !important; min-height: 58px !important; resize: vertical !important; box-sizing: border-box !important; }
+#modalCheckBhHePt .check-ppc-action-cell { min-width: 125px !important; }
+#modalCheckBhHePt .check-ppc-action-btn, #modalCheckBhHePt .check-coordinator-approve-btn, #modalCheckBhHePt .check-coordinator-reject-btn { min-width: 110px !important; width: 100% !important; white-space: normal !important; overflow-wrap: anywhere !important; }
+</style>
+<script id="fix-drop-iat-click-final">
+(function(){
+  function prepararDropIat(){
+    var modal=document.getElementById('modalCheckDropIat');
+    if(modal && modal.parentElement!==document.body) document.body.appendChild(modal);
+    var card=document.getElementById('checkDropIatCard');
+    if(card){ card.setAttribute('role','button'); card.setAttribute('tabindex','0'); }
+  }
+  function abrirDropIat(){
+    prepararDropIat();
+    var modal=document.getElementById('modalCheckDropIat');
+    if(!modal){ console.error('Check Drop IAT: modal #modalCheckDropIat não encontrado.'); return; }
+    modal.style.setProperty('display','flex','important');
+    modal.style.setProperty('visibility','visible','important');
+    modal.style.setProperty('opacity','1','important');
+    modal.setAttribute('aria-hidden','false');
+    document.body.classList.add('modal-open');
+    try { if(typeof window.renderizarCheckDropIat==='function') window.renderizarCheckDropIat(); }
+    catch(err){ console.error('Erro ao renderizar o analítico Drop IAT:',err); }
+  }
+  document.addEventListener('DOMContentLoaded',prepararDropIat);
+  document.addEventListener('click',function(e){
+    var card=e.target && e.target.closest ? e.target.closest('#checkDropIatCard') : null;
+    if(!card) return;
+    e.preventDefault(); e.stopPropagation();
+    abrirDropIat();
+  },true);
+  document.addEventListener('keydown',function(e){
+    var card=e.target && e.target.closest ? e.target.closest('#checkDropIatCard') : null;
+    if(!card || (e.key!=='Enter' && e.key!==' ')) return;
+    e.preventDefault(); e.stopPropagation(); abrirDropIat();
+  },true);
+  window.abrirDropIatSafely=abrirDropIat;
+})();
+</script>
